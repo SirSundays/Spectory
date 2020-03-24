@@ -9,8 +9,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // add routes
-const router = require('./routes/router.js');
-app.use('/api', router);
+const router = require('./routes/auth.routes.js');
+app.use('/api/auth', router);
 
 // run server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
