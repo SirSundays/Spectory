@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+    <mat-sidenav opened disableClose>
+        <img src='../assets/spectory.png'>
+    <a (click)="doLogout()" id="logout"><fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon></a>
+    </mat-sidenav>
+    <router-outlet></router-outlet>
+</mat-sidenav-container>

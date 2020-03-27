@@ -5,7 +5,6 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AboutComponent } from './components/about/about.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router'
@@ -13,13 +12,20 @@ import { RouterModule } from '@angular/router'
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {MatSidenavModule} from '@angular/material/sidenav';
+
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { OrderRequestOverviewComponent } from './components/order-request-overview/order-request-overview.component';
+
+
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, 
-    AboutComponent
+    DashboardComponent, OrderRequestOverviewComponent, 
   ],
   imports: [
     BrowserModule,
@@ -27,7 +33,9 @@ let keycloakService: KeycloakService = new KeycloakService();
     KeycloakAngularModule,
     AppRoutingModule,
     RouterModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    FontAwesomeModule,
   ],
   providers: [
     {
@@ -39,6 +47,9 @@ let keycloakService: KeycloakService = new KeycloakService();
 })
 
 export class AppModule implements DoBootstrap {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas, far);
+  }
   async ngDoBootstrap(app) {
     const { keycloakConfig } = environment;
 
