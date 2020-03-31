@@ -1,1 +1,25 @@
-<p>order-request-overview works!</p>
+<div class="card">
+    <div>
+        <a (click)="addRequest()">
+            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+        </a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">What?</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let request of all_requests; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td> {{ request.name }}</td>
+            <td>{{ request.quantity | number }}</td>
+            <td>{{ request.price | number }}</td>
+        </tr>
+    </tbody>
+</table>

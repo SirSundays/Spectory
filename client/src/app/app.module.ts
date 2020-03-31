@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, DoBootstrap } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -12,20 +13,20 @@ import { RouterModule } from '@angular/router'
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { OrderRequestOverviewComponent } from './components/order-request-overview/order-request-overview.component';
-
+import { OrderRequestModalComponent } from './components/order-request-modal/order-request-modal.component';
 
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, OrderRequestOverviewComponent, 
+    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,9 +35,11 @@ let keycloakService: KeycloakService = new KeycloakService();
     AppRoutingModule,
     RouterModule,
     BrowserAnimationsModule,
-    MatSidenavModule,
+    NgbModule,
     FontAwesomeModule,
-  ],
+    FormsModule,
+    ReactiveFormsModule
+    ],
   providers: [
     {
       provide: KeycloakService,

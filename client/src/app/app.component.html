@@ -1,7 +1,26 @@
-<mat-sidenav-container>
-    <mat-sidenav opened disableClose>
-        <img src='../assets/spectory.png'>
-    <a (click)="doLogout()" id="logout"><fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon></a>
-    </mat-sidenav>
-    <router-outlet></router-outlet>
-</mat-sidenav-container>
+<div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading"><img src='../assets/spectory.png'></div>
+        <div class="list-group list-group-flush">
+            
+        </div>
+        <div class="sidebar-footer">
+            <a (click)="doLogout()" id="logout">
+                <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
+            </a>
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->

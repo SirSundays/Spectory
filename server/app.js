@@ -6,6 +6,20 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const config = require("./config/db");
 const app = express();
+Keycloak = require('keycloak-connect');
+
+var memoryStore = new session.MemoryStore();
+
+app.use(session({
+  secret: 'mysecret',
+  resave: false,
+  saveUninitialized: true,
+  store: memoryStore
+}));
+
+keycloak = new Keycloak({
+  store: memoryStore
+});
 
 //configure database and mongoose
 mongoose.set("useCreateIndex", true);
@@ -31,11 +45,11 @@ app.use(morgan("dev")); // configire morgan
 
 // define first route
 app.get("/", (req, res) => {
-  console.log("Hello MEVN Soldier");
+  console.log("Hello MEAN Soldier");
 });
 
-const userRoutes = require("./api/user/route/user"); //bring in our user routes
-app.use("/user", userRoutes);
+const orderRequestRoutes = require("./api/order_request/route/order_request"); //bring in our user routes
+app.use("/api/order_request", orderRequestRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is running on ${PORT}`);

@@ -1,27 +1,48 @@
-mat-sidenav-container {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-
-mat-sidenav {
-    padding: 1em;
-    width: 8em;
-    text-align: center;
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: 0;
+  width: 7%;
+  background-color: #111;
 }
 
-mat-sidenav img {
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 0;
     width: 100%;
+    margin: 1%;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: -15rem;
+}
+
+img {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.sidebar-footer {
+    position: fixed;
+    bottom: 0;
+    height: 5%;
+    width: 7%;
+    padding-left: 3%;
 }
 
 #logout {
-    position: absolute;
-    bottom: 0;
-    left: 45%;
-    padding-bottom: 1em;
+    text-align: center;
+    color: grey;
 }
+
 #logout:hover {
     cursor: pointer;
 }
