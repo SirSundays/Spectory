@@ -8,18 +8,16 @@ const config = require("./config/db");
 const app = express();
 Keycloak = require('keycloak-connect');
 
-var memoryStore = new session.MemoryStore();
+keycloakConfig = {
+  "realm": "Spectory",
+  'auth-server-url': 'http://localhost:8000/auth',
+  'bearer-only': true,
+  'ssl-required': 'external',
+  'resource': 'Spectory-Nodejs-Server',
+};
 
-app.use(session({
-  secret: 'mysecret',
-  resave: false,
-  saveUninitialized: true,
-  store: memoryStore
-}));
-
-keycloak = new Keycloak({
-  store: memoryStore
-});
+keycloak = new Keycloak({}, keycloakConfig);
+app.use(keycloak.middleware());
 
 //configure database and mongoose
 mongoose.set("useCreateIndex", true);
