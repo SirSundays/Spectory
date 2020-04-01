@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const config = require("./config/db");
 const app = express();
+jwt = require('jsonwebtoken');
 Keycloak = require('keycloak-connect');
 
 keycloakConfig = {
@@ -41,13 +42,11 @@ app.use(bodyParser.json());
 
 app.use(morgan("dev")); // configire morgan
 
-// define first route
-app.get("/", (req, res) => {
-  console.log("Hello MEAN Soldier");
-});
-
 const orderRequestRoutes = require("./api/order_request/route/order_request"); //bring in our user routes
 app.use("/api/order_request", orderRequestRoutes);
+
+const userRoutes = require("./api/user/route/user");
+app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is running on ${PORT}`);

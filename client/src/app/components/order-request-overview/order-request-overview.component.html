@@ -12,14 +12,16 @@
             <th scope="col">What?</th>
             <th scope="col">Quantity</th>
             <th scope="col">Price</th>
+            <th scope="col">User</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let request of all_requests; index as i">
+        <tr *ngFor="let request of all_requests; index as i" class="request-row" (click)="showRequestDeatils(request._id)">
             <th scope="row">{{ i + 1 }}</th>
-            <td> {{ request.name }}</td>
+            <td>{{ request.name }}</td>
             <td>{{ request.quantity | number }}</td>
             <td>{{ request.price | number }}</td>
+            <td>{{ request.user }}</td>
         </tr>
     </tbody>
 </table>

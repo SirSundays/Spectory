@@ -14,12 +14,14 @@
 <form [formGroup]="requestForm" (ngSubmit)="submitRequest(requestForm.value)">
     <div class="modal-body">
         <div class="input-group row">
+            <label for="name">Name*</label>
             <input id="name" type="text" class="form-control" formControlName="name" placeholder="Name *" required
                 minlength="1">
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right" ngbTooltip="What you want to order">
             </fa-icon>
         </div>
         <div class="input-group row">
+            <label for="quantity">Quantity*</label>
             <input id="quantity" type="number" class="form-control" formControlName="quantity" placeholder="Quantity *"
                 min="1" required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right"
@@ -27,6 +29,7 @@
             </fa-icon>
         </div>
         <div class="input-group row">
+            <label for="price">Price*</label>
             <input id="price" type="number" class="form-control" formControlName="price" placeholder="Price in € *"
                 min="0.01" required step="0.01">
             <div class="input-group-prepend">
@@ -37,6 +40,7 @@
             </fa-icon>
         </div>
         <div class="input-group row">
+            <label for="shipping">Shipping*</label>
             <input id="shipping" type="number" class="form-control" formControlName="shipping"
                 placeholder="Shipping in € *" min="0.01" required step="0.01">
             <div class="input-group-prepend">
@@ -47,6 +51,7 @@
             </fa-icon>
         </div>
         <div class="input-group row">
+            <label for="reason">Reason*</label>
             <input id="reason" type="text" class="form-control" formControlName="reason" placeholder="Reason *" min="1"
                 required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right"
@@ -54,6 +59,7 @@
             </fa-icon>
         </div>
         <div class="input-group row">
+            <label for="link">Link*</label>
             <input id="link" type="text" class="form-control" formControlName="link" placeholder="Link *" min="1"
                 required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right"
@@ -61,6 +67,7 @@
             </fa-icon>
         </div>
         <div class="input-group row">
+            <label for="info">More info</label>
             <input id="info" type="text" class="form-control" formControlName="info" placeholder="More information">
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right"
                 ngbTooltip="Do we need to know more? (Not required)">

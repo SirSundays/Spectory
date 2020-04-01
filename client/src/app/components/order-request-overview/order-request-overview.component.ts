@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { OrderRequestService } from 'src/app/service/order-request.service';
+import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
 import { OrderRequestModalComponent } from '../order-request-modal/order-request-modal.component';
+import { OrderRequestDetailModalComponent } from '../order-request-detail-modal/order-request-detail-modal.component';
 
 @Component({
   selector: 'app-order-request-overview',
@@ -24,5 +25,10 @@ export class OrderRequestOverviewComponent implements OnInit {
 
   addRequest() {
     const modalRef = this.modalService.open(OrderRequestModalComponent, {size: 'xl', backdrop: 'static'});
+  }
+
+  showRequestDeatils(id) {
+    const modalRef = this.modalService.open(OrderRequestDetailModalComponent, {size: 'xl', backdrop: 'static'});
+    modalRef.componentInstance.request_id = id;
   }
 }

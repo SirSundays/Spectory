@@ -14,9 +14,12 @@ export class OrderRequestService {
     return this.http.get(this.node_url + '/api/order_request/all');
   }
 
+  getOneSpecificRequest(id) {
+    let param = new HttpParams().set('req_id', id);
+    return this.http.get(this.node_url + '/api/order_request/OneSpecific', { params: param });
+  }
+
   postNewRequest(newRequest) {
-    this.http.post(this.node_url + '/api/order_request/new_request', newRequest).subscribe(data => {
-      return data;
-    });
+    return this.http.post(this.node_url + '/api/order_request/new_request', newRequest)
   }
 }

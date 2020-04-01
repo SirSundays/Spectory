@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ request.name }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p *ngIf="err">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let error of errMessage">
+            <strong>Warning!</strong> {{ error }}
+        </p>
+    </ngb-alert>
+</p>
+<div class="modal-body">
+    <ul class="list-group">
+        <li class="list-group-item">Name: {{ request.name }}</li>
+        <li class="list-group-item">Quantity: {{ request.quantity }}</li>
+        <li class="list-group-item">Price: {{ request.price }}€</li>
+        <li class="list-group-item">Shipping: {{ request.shipping }}€</li>
+        <li class="list-group-item">Reason: {{ request.reason }}</li>
+        <li class="list-group-item">Link/Source: {{ request.link }}</li>
+        <li class="list-group-item">More info: {{ request.info}}</li>
+        <li class="list-group-item">Requested: {{ request.created }}</li>
+        <li class="list-group-item">Request by: {{ request.user }}</li>
+    </ul>
+</div>
