@@ -42,6 +42,12 @@ const orderRequestSchema = mongoose.Schema({
   },
   admin_user: {
     type: String
+  },
+  message: {
+    type: String
+  },
+  processed: {
+    type: Number
   }
 });
 

@@ -20,6 +20,8 @@
             <th scope="col">Quantity</th>
             <th scope="col">Price</th>
             <th scope="col">User</th>
+            <th scope="col">State</th>
+            <th scope="col" *ngIf="roles.includes('admin')">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -29,7 +31,14 @@
             <td (click)="showRequestDeatils(request._id)">{{ request.quantity | number }}</td>
             <td (click)="showRequestDeatils(request._id)">{{ request.price | number }}</td>
             <td (click)="showRequestDeatils(request._id)">{{ request.user }}</td>
-            <td><button type="button" class="btn btn-dark" *ngIf="roles.includes('admin')">Process</button></td>
+            <td (click)="showRequestDeatils(request._id)">
+                <span class="badge badge-primary" *ngIf="request.state == 'requested'">requested</span>
+                <span class="badge badge-success" *ngIf="request.state == 'accept'">accepted</span>
+                <span class="badge badge-light" *ngIf="request.state == 'ordered'">ordered</span>
+                <span class="badge badge-danger" *ngIf="request.state == 'decline'">declined</span>
+                <span class="badge badge-secondary" *ngIf="request.state == 'archived'">archived</span>
+            </td>
+            <td><button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'requested'" (click)="showRequestProcess(request._id)">Process</button></td>
         </tr>
     </tbody>
 </table>

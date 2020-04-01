@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ request.name }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let error of errMessage">
+            <strong>Warning!</strong> {{ error }}
+        </p>
+    </ngb-alert>
+</p>
+<form [formGroup]="processForm" (ngSubmit)="submitProcess(processForm.value)">
+    <div class="modal-body">
+        <ul class="list-group">
+            <li class="list-group-item">Name: {{ request.name }}</li>
+            <li class="list-group-item">Quantity: {{ request.quantity }}</li>
+            <li class="list-group-item">Price: {{ request.price }}€</li>
+            <li class="list-group-item">Shipping: {{ request.shipping }}€</li>
+            <li class="list-group-item">Reason: {{ request.reason }}</li>
+            <li class="list-group-item">Link/Source: {{ request.link }}</li>
+            <li class="list-group-item">More info: {{ request.info}}</li>
+            <li class="list-group-item">Requested: {{ request.created }}</li>
+            <li class="list-group-item">Request by: {{ request.user }} | {{ fullname }}</li>
+        </ul>
+        <label for="message">Message</label>
+        <textarea class="form-control" id="message" rows="3" formControlName="message"></textarea>
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="state">
+            <label ngbButtonLabel class="btn-success">
+                <input ngbButton type="radio" value="accept" checked> Accept
+            </label>
+            <label ngbButtonLabel class="btn-danger">
+                <input ngbButton type="radio" value="decline"> Decline
+            </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="button" type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>

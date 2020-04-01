@@ -10,3 +10,9 @@
 .input-group {
     margin-bottom: 5px;
 }
+
+#import-btn {
+    position: absolute;
+    left: 0;
+    margin-left: 1%;
+}

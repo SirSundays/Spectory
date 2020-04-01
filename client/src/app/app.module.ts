@@ -21,13 +21,15 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { OrderRequestOverviewComponent } from './components/order-request-overview/order-request-overview.component';
 import { OrderRequestModalComponent } from './components/order-request-modal/order-request-modal.component';
 import { OrderRequestDetailModalComponent } from './components/order-request-detail-modal/order-request-detail-modal.component';
+import { OrderRequestProcessComponent } from './components/order-request-process/order-request-process.component';
+import { OrderRequestModalImportComponent } from './components/order-request-modal-import/order-request-modal-import.component';
 
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent,
+    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent,
   ],
   imports: [
     BrowserModule,

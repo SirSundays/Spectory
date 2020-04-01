@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrderRequestModalImportComponent } from '../order-request-modal-import/order-request-modal-import.component';
 
 @Component({
   selector: 'app-order-request-modal',
@@ -15,7 +16,7 @@ export class OrderRequestModalComponent implements OnInit {
   errAfterSubmit = false;
   errMessage = [];
 
-  constructor(private orderRequestService: OrderRequestService, private formBuilder: FormBuilder, public activeModal: NgbActiveModal, public router: Router) { }
+  constructor(private orderRequestService: OrderRequestService, private formBuilder: FormBuilder, private modalService: NgbModal, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
@@ -27,6 +28,20 @@ export class OrderRequestModalComponent implements OnInit {
       link: '',
       info: ''
     })
+  }
+
+  async importRequest() {
+    const modalRef = this.modalService.open(OrderRequestModalImportComponent, {size: 'xl', backdrop: 'static', scrollable: true});
+    let importRequest = await modalRef.result;
+    this.requestForm.patchValue({
+      name: importRequest.name,
+      quantity: importRequest.quantity,
+      price: importRequest.price,
+      shipping: importRequest.shipping,
+      reason: importRequest.reason,
+      link: importRequest.link,
+      info: importRequest.info
+    });
   }
 
   submitRequest(request) {
@@ -53,7 +68,7 @@ export class OrderRequestModalComponent implements OnInit {
   readResponse(resp) {
     // console.log(resp);
     this.errMessage = [];
-    alert("Neuer Antrag erfolgreich erstellt.");
+    alert("New request successfull!");
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/order-request/overview']);
     });
