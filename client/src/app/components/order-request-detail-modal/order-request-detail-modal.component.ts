@@ -27,6 +27,8 @@ export class OrderRequestDetailModalComponent implements OnInit {
     created: ''
   };
 
+  fullname = '';
+
   constructor(private orderRequestService: OrderRequestService, private userService: UserService, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
@@ -34,7 +36,7 @@ export class OrderRequestDetailModalComponent implements OnInit {
       this.request = data['one'];
       this.request.created = new Date(this.request.created).toLocaleString();
       this.userService.getFullName(this.request.user).subscribe(async data => {
-
+        this.fullname = data['firstname'] + ' ' + data['lastname'];
       });
     });
   }

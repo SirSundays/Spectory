@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from 'src/app/service/user/user.service';
 
 import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
 import { OrderRequestModalComponent } from '../order-request-modal/order-request-modal.component';
@@ -13,14 +14,17 @@ import { OrderRequestDetailModalComponent } from '../order-request-detail-modal/
 
 export class OrderRequestOverviewComponent implements OnInit {
 
-  constructor(private orderRequestService: OrderRequestService, private modalService: NgbModal) { }
+  constructor(private orderRequestService: OrderRequestService, private userService: UserService, private modalService: NgbModal) { }
 
   all_requests = [];
+
+  roles = [];
 
   ngOnInit(): void {
     this.orderRequestService.getAllRequests().subscribe(data => {
       this.all_requests = data['all'];
     });
+    this.roles = this.userService.getUserRoles();
   }
 
   addRequest() {

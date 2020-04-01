@@ -1,9 +1,16 @@
 <div class="card">
-    <div>
-        <a (click)="addRequest()">
-            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-        </a>
-    </div>
+    <form>
+        <div class="form-row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Search for user">
+            </div>
+            <div class="col">
+                <a (click)="addRequest()">
+                    <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+                </a>
+            </div>
+        </div>
+    </form>
 </div>
 <table class="table table-striped">
     <thead>
@@ -16,12 +23,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let request of all_requests; index as i" class="request-row" (click)="showRequestDeatils(request._id)">
-            <th scope="row">{{ i + 1 }}</th>
-            <td>{{ request.name }}</td>
-            <td>{{ request.quantity | number }}</td>
-            <td>{{ request.price | number }}</td>
-            <td>{{ request.user }}</td>
+        <tr *ngFor="let request of all_requests; index as i" class="request-row">
+            <th scope="row" (click)="showRequestDeatils(request._id)">{{ i + 1 }}</th>
+            <td (click)="showRequestDeatils(request._id)">{{ request.name }}</td>
+            <td (click)="showRequestDeatils(request._id)">{{ request.quantity | number }}</td>
+            <td (click)="showRequestDeatils(request._id)">{{ request.price | number }}</td>
+            <td (click)="showRequestDeatils(request._id)">{{ request.user }}</td>
+            <td><button type="button" class="btn btn-dark" *ngIf="roles.includes('admin')">Process</button></td>
         </tr>
     </tbody>
 </table>
