@@ -26,10 +26,10 @@ mongoose.set("useCreateIndex", true);
 mongoose
   .connect(config.database, { useNewUrlParser: true })
   .then(() => {
-    console.log("Database is connected");
+    // console.log("Database is connected");
   })
   .catch(err => {
-    console.log({ database_error: err });
+    // console.log({ database_error: err });
   });
 // db configuaration ends here
 
@@ -43,12 +43,12 @@ app.use(bodyParser.json());
 
 app.use(morgan("dev")); // configire morgan
 
-const orderRequestRoutes = require("./api/order_request/route/order_request"); //bring in our user routes
+const orderRequestRoutes = require("./api/order_request/route/orderRequest"); //bring in our user routes
 app.use("/api/order_request", orderRequestRoutes);
 
 const userRoutes = require("./api/user/route/user");
 app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
-  console.log(`App is running on ${PORT}`);
+  // console.log(`App is running on ${PORT}`);
 });

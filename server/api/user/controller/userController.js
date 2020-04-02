@@ -22,10 +22,10 @@ exports.getFullName = async function (req, res) {
                 });
             })
             .catch((err) => {
-                res.status(400).json({ err: err })
+                res.status(400).json({ err })
             });
     }
     catch (err) {
-        res.status(400).json({ err: err })
+        res.status(400).json({ err })
     }
 }

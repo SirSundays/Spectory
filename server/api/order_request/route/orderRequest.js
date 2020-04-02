@@ -6,6 +6,6 @@ router.get("/all", keycloak.protect("realm:basic"), orderRequestController.getAl
 router.get("/oneSpecific", keycloak.protect("realm:basic"), orderRequestController.getOneSpecific);
 router.get("/importRequest", keycloak.protect("realm:basic"), orderRequestController.searchImportRequest);
 router.post("/new_request", keycloak.protect("realm:admin"), orderRequestController.newRequest);
-router.put("/request", keycloak.protect("realm:admin"), orderRequestController.updateRequest)
+router.put("/request", keycloak.protect("realm:admin"), orderRequestController.updateRequest);
 
 module.exports = router;

@@ -25,7 +25,7 @@ const orderRequestSchema = mongoose.Schema({
     type: String,
     required: [true, "Please Include where to buy this item"]
   },
-  alt_link: {
+  altLink: {
     type: String
   },
   info: {
@@ -40,7 +40,7 @@ const orderRequestSchema = mongoose.Schema({
   state: {
     type: String
   },
-  admin_user: {
+  adminUser: {
     type: String
   },
   message: {
@@ -50,6 +50,8 @@ const orderRequestSchema = mongoose.Schema({
     type: Number
   }
 });
+
+const OrderRequest = mongoose.model("OrderRequest", orderRequestSchema);
 
 orderRequestSchema.statics.getAll = async function () {
   try {
@@ -61,9 +63,9 @@ orderRequestSchema.statics.getAll = async function () {
   }
 }
 
-orderRequestSchema.statics.getOneSpecific = async function (req_id) {
+orderRequestSchema.statics.getOneSpecific = async function (reqId) {
   try {
-    const one = await OrderRequest.findOne({ _id: req_id });
+    const one = await OrderRequest.findOne({ _id: reqId });
     return one;
   }
   catch (err) {
@@ -71,5 +73,4 @@ orderRequestSchema.statics.getOneSpecific = async function (req_id) {
   }
 }
 
-const OrderRequest = mongoose.model("OrderRequest", orderRequestSchema);
 module.exports = OrderRequest;
