@@ -30,7 +30,7 @@
             <td (click)="showRequestDeatils(request._id)">{{ request.name }}</td>
             <td (click)="showRequestDeatils(request._id)">{{ request.quantity | number }}</td>
             <td (click)="showRequestDeatils(request._id)">{{ request.price | number }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.user }}</td>
+            <td (click)="showRequestDeatils(request._id)">{{ request.user.firstName }} {{request.user.lastName }}</td>
             <td (click)="showRequestDeatils(request._id)">
                 <span class="badge badge-primary" *ngIf="request.state == 'requested'">requested</span>
                 <span class="badge badge-success" *ngIf="request.state == 'accept'">accepted</span>

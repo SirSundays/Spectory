@@ -60,14 +60,14 @@
         </div>
         <div class="input-group row">
             <label for="link">Purchaser*</label>
-            <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="email" formControlName="purchaser" required style="width: 90%;"></ng-select>
+            <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="id" formControlName="purchaser" required style="width: 90%;"></ng-select>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
                 ngbTooltip="Who has to purchase this order">
             </fa-icon>
         </div>
         <div class="input-group row">
             <label for="link">Receiver*</label>
-            <ng-select [items]="allBasicUser" bindLabel="fullName" bindValue="email" formControlName="receiver" required style="width: 90%;"></ng-select>
+            <ng-select [items]="allBasicUser" bindLabel="fullName" bindValue="id" formControlName="receiver" required style="width: 90%;"></ng-select>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
                 ngbTooltip="To whom goes this order">
             </fa-icon>

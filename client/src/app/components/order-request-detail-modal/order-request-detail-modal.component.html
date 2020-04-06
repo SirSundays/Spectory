@@ -21,6 +21,6 @@
         <li class="list-group-item">Link/Source: {{ request.link }}</li>
         <li class="list-group-item">More info: {{ request.info}}</li>
         <li class="list-group-item">Requested: {{ request.created }}</li>
-        <li class="list-group-item">Request by: {{ request.user }} | {{ fullname }}</li>
+        <li class="list-group-item">Request by: <a href="mailto:{{request.user.email}}">{{ request.user.firstName }} {{request.user.lastName }}</a></li>
     </ul>
 </div>

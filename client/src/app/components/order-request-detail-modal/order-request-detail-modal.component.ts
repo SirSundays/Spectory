@@ -22,11 +22,13 @@ export class OrderRequestDetailModalComponent implements OnInit {
     reason: '',
     link: '',
     info: '',
-    user: '',
+    user: {
+      firstName: '',
+      lastName: '',
+      email: ''
+    },
     created: ''
   };
-
-  fullname = '';
 
   constructor(private orderRequestService: OrderRequestService, private userService: UserService, public activeModal: NgbActiveModal, public router: Router) { }
 
@@ -34,9 +36,6 @@ export class OrderRequestDetailModalComponent implements OnInit {
     this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe( async data => {
       this.request = data['one'];
       this.request.created = new Date(this.request.created).toLocaleString();
-      this.userService.getFullName(this.request.user).subscribe(async data => {
-        this.fullname = data['firstname'] + ' ' + data['lastname'];
-      });
     });
   }
 }

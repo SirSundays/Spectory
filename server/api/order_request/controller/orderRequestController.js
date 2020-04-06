@@ -1,9 +1,19 @@
 const Order_Request = require('../model/Order_request');
+const userController = require('../../user/controller/userController');
 
 exports.getAll = async function (req, res) {
     try {
-        const all = await Order_Request.getAll();
-        res.status(201).json({ all });
+        const all = await Order_Request.find().sort({ created: -1 });
+        all.forEach(async function (request, i, sendall) {
+            sendall[i] = {};
+            sendall[i] = request;
+            userController.idToUser(request.user, async function (user) {
+                sendall[i].user = user;
+                if (sendall.length === all.length) {
+                    res.status(201).json({ sendall });
+                }
+            });
+        });
     }
     catch (err) {
         res.status(400).json({ err: err })
@@ -12,8 +22,11 @@ exports.getAll = async function (req, res) {
 
 exports.getOneSpecific = async function (req, res) {
     try {
-        const one = await Order_Request.getOneSpecific(req.query.req_id);
-        res.status(201).json({ one });
+        const one = await Order_Request.findOne({ _id: req.query.req_id });
+        userController.idToUser(one.user, async function(user) {
+            one.user = user;
+            res.status(201).json({ one });
+        });
     }
     catch (err) {
         res.status(400).json({ err: err })
@@ -40,22 +53,26 @@ exports.searchImportRequest = async function (req, res) {
 exports.newRequest = async function (req, res) {
     try {
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        const request = new Order_Request({
-            name: req.body.name,
-            quantity: req.body.quantity,
-            price: req.body.price,
-            shipping: req.body.shipping,
-            reason: req.body.reason,
-            link: req.body.link,
-            info: req.body.info,
-            created: Date.now(),
-            user: email,
-            state: 'requested'
+        userController.emailToId(email, async function (id) {
+            const request = new Order_Request({
+                name: req.body.name,
+                quantity: req.body.quantity,
+                price: req.body.price,
+                shipping: req.body.shipping,
+                reason: req.body.reason,
+                link: req.body.link,
+                info: req.body.info,
+                created: Date.now(),
+                user: id,
+                state: 'requested'
+            });
+            let data = await request.save();
+            console.log(data);
+            res.status(201).json({ data });
         });
-        let data = await request.save();
-        res.status(201).json({ data });
     }
     catch (err) {
+        console.log(err);
         res.status(400).json({ err: err });
     }
 }
@@ -63,15 +80,17 @@ exports.newRequest = async function (req, res) {
 exports.updateRequest = async function (req, res) {
     try {
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        let update = await Order_Request.findByIdAndUpdate(req.body.id, {
-            state: req.body.state,
-            message: req.body.message,
-            admin_user: email,
-            processed: Date.now()
-        }, {
-            new: true
+        await userController.emailToId(email, async function (id) {
+            let update = await Order_Request.findByIdAndUpdate(req.body.id, {
+                state: req.body.state,
+                message: req.body.message,
+                admin_user: id,
+                processed: Date.now()
+            }, {
+                new: true
+            });
+            res.status(201).json({ update });
         });
-        res.status(201).json({ update });
     }
     catch (err) {
         res.status(400).json({ err: err });

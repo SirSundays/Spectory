@@ -12,6 +12,13 @@
         </div>
     </form>
 </div>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let error of errMessage">
+            <strong>Warning!</strong> {{ error }}
+        </p>
+    </ngb-alert>
+</p>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -22,7 +29,7 @@
             <th scope="col">Receiver</th>
             <th scope="col">Purchaser</th>
             <th scope="col">State</th>
-            <th scope="col" *ngIf="roles.includes('admin')">Action</th>
+            <th scope="col" *ngIf="roles.includes('purchaser')">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -31,8 +38,8 @@
             <td (click)="showParcelDeatils(parcel._id)">{{ parcel.name }}</td>
             <td (click)="showParcelDeatils(parcel._id)">{{ parcel.quantity | number }}</td>
             <td (click)="showParcelDeatils(parcel._id)">{{ parcel.price | number }}</td>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.receiver }}</td>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.purchaser }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.receiver.firstName }} {{parcel.receiver.lastName }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.purchaser.firstName }} {{parcel.purchaser.lastName }}</td>
             <td (click)="showParcelDeatils(parcel._id)">
                 <span class="badge badge-primary" *ngIf="parcel.state == 'requested'">requested</span>
                 <span class="badge badge-success" *ngIf="parcel.state == 'accept'">accepted</span>
@@ -42,8 +49,7 @@
                 <span class="badge badge-secondary" *ngIf="parcel.state == 'archived'">archived</span>
             </td>
             <td>
-                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && parcel.state == 'requested'" (click)="showRequestProcess(parcel._id)">Process</button>
-                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && parcel.state == 'accept'" (click)="showRequestAllocate(parcel._id, parcel.name)">Allocate</button>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('purchaser') && parcel.state == 'allocated' && parcel.purchaser.email == myMail" (click)="parcelOrdered(parcel._id, parcel.name)">Ordered</button>
             </td>
         </tr>
     </tbody>

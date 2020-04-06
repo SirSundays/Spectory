@@ -36,7 +36,7 @@ const orderRequestSchema = mongoose.Schema({
     type: String
   },
   user: {
-    type: String
+    
   },
   created: {
     type: Number
@@ -54,26 +54,6 @@ const orderRequestSchema = mongoose.Schema({
     type: Number
   }
 });
-
-orderRequestSchema.statics.getAll = async function () {
-  try {
-    const all = await OrderRequest.find().sort({created: -1});
-    return all;
-  }
-  catch (err) {
-    return err;
-  }
-}
-
-orderRequestSchema.statics.getOneSpecific = async function (req_id) {
-  try {
-    const one = await OrderRequest.findOne({ _id: req_id });
-    return one;
-  }
-  catch (err) {
-    return err;
-  }
-}
 
 const OrderRequest = mongoose.model("OrderRequest", orderRequestSchema);
 module.exports = OrderRequest;

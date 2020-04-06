@@ -10,26 +10,6 @@ let settings = {
     client_id: 'admin-cli'
 };
 
-exports.getFullName = async function (req, res) {
-    try {
-        adminClient(settings)
-            .then((client) => {
-                client.users.find('Spectory', { email: req.query.email }).then((user) => {
-                    res.status(201).json({
-                        firstname: user[0].firstName,
-                        lastname: user[0].lastName
-                    });
-                });
-            })
-            .catch((err) => {
-                res.status(400).json({ err: err })
-            });
-    }
-    catch (err) {
-        res.status(400).json({ err: err })
-    }
-}
-
 exports.searchAllBasicUser = async function (req, res) {
     try {
         adminClient(settings)
@@ -39,7 +19,8 @@ exports.searchAllBasicUser = async function (req, res) {
                     users.forEach(user => {
                         sendUser.push({
                             fullName: user.firstName + " " + user.lastName,
-                            email: user.email
+                            email: user.email,
+                            id: user.id
                         })
                     });
                     res.status(201).json({
@@ -48,10 +29,12 @@ exports.searchAllBasicUser = async function (req, res) {
                 });
             })
             .catch((err) => {
+                console.log(err);
                 res.status(400).json({ err: err })
             });
     }
-    catch {
+    catch (err) {
+        console.log(err);
         res.status(400).json({ err: err })
     }
 }
@@ -65,7 +48,8 @@ exports.searchAllPurchaserUser = async function (req, res) {
                     users.forEach(user => {
                         sendUser.push({
                             fullName: user.firstName + " " + user.lastName,
-                            email: user.email
+                            email: user.email,
+                            id: user.id
                         })
                     });
                     res.status(201).json({
@@ -74,10 +58,57 @@ exports.searchAllPurchaserUser = async function (req, res) {
                 });
             })
             .catch((err) => {
+                console.log(err);
                 res.status(400).json({ err: err })
             });
     }
-    catch {
+    catch (err) {
+        console.log(err);
         res.status(400).json({ err: err })
+    }
+}
+
+exports.emailToId = async function(email, further) {
+    try {
+        adminClient(settings)
+            .then((client) => {
+                client.users.find('Spectory', { email: email }).then((users) => {
+                    let id = users[0].id;
+                    further(id);
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                return -1;
+            });
+    }
+    catch (err) {
+        console.log(err);
+        return -1;
+    }
+}
+
+exports.idToUser = async function(id, further) {
+    try {
+        adminClient(settings)
+            .then((client) => {
+                client.users.find('Spectory', { userId: id }).then((users) => {
+                    let user = {
+                        id: id,
+                        firstName: users.firstName,
+                        lastName: users.lastName,
+                        email: users.email
+                    }
+                    further(user);
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                return -1;
+            });
+    }
+    catch (err) {
+        console.log(err);
+        return -1;
     }
 }

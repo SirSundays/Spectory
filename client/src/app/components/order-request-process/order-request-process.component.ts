@@ -24,11 +24,13 @@ export class OrderRequestProcessComponent implements OnInit {
     reason: '',
     link: '',
     info: '',
-    user: '',
+    user: {
+      firstName: '',
+      lastName: '',
+      email: ''
+    },
     created: ''
   };
-
-  fullname = '';
 
   processForm;
 
@@ -38,9 +40,6 @@ export class OrderRequestProcessComponent implements OnInit {
     this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe(async data => {
       this.request = data['one'];
       this.request.created = new Date(this.request.created).toLocaleString();
-      this.userService.getFullName(this.request.user).subscribe(async data => {
-        this.fullname = data['firstname'] + ' ' + data['lastname'];
-      });
     });
 
     this.processForm = this.formBuilder.group({

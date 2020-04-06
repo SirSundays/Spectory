@@ -24,7 +24,7 @@ export class OrderRequestOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.orderRequestService.getAllRequests().subscribe(data => {
-      this.all_requests = data['all'];
+      this.all_requests = data['sendall'];
     });
     this.roles = this.userService.getUserRoles();
   }

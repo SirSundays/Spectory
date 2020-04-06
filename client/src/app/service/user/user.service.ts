@@ -10,12 +10,7 @@ export class UserService {
   constructor(private http: HttpClient, private keycloakAngular: KeycloakService) { }
 
   node_url = 'http://localhost:4000';
-  roles = ['basic', 'admin'];
-
-  getFullName(email) {
-    let param = new HttpParams().set('email', email);
-    return this.http.get(this.node_url + '/api/user/fullname', { params: param });
-  }
+  roles = ['basic', 'admin', 'purchaser'];
 
   getUserRoles() {
     try {
@@ -26,8 +21,17 @@ export class UserService {
         }
       });
       return userRoles;
-    } catch (e){
+    } catch (err) {
       return [];
+    }
+  }
+
+  async getOwnEmail() {
+    try {
+      return await this.keycloakAngular.getKeycloakInstance().loadUserProfile();
+    }
+    catch (err) {
+      return '';
     }
   }
 

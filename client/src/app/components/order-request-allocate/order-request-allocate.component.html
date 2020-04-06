@@ -14,7 +14,7 @@
 <form [formGroup]="allocateForm" (ngSubmit)="submitAllocate(allocateForm.value)">
     <div class="modal-body" style="min-height: 200px;">
         <label>Purchaser: </label>
-        <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="email" formControlName="purchaser" required></ng-select>
+        <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="id" formControlName="purchaser" required></ng-select>
     </div>
     <div class="modal-footer">
         <button class="button" type="submit" class="btn btn-primary">Allocate</button>

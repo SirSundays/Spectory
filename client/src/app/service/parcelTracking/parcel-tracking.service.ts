@@ -20,8 +20,11 @@ export class ParcelTrackingService {
     return this.http.get(this.node_url + '/api/parcelTracking/OneSpecific', { params: param });
   }
 
-  allocateRequest(request) {
-    return this.http.post(this.node_url + '/api/parcelTracking/new_request_allocate', request);
+  updateParcelOrdered(id) {
+    let body = {
+      id: id
+    }
+    return this.http.put(this.node_url + '/api/parcelTracking/parcel_ordered', body);
   }
 
   postNewParcel(newParcel) {

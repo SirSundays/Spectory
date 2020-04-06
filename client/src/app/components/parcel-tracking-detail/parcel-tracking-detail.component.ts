@@ -19,18 +19,28 @@ export class ParcelTrackingDetailComponent implements OnInit {
     quantity: '',
     price: '',
     shipping: '',
-    purchaser: '',
+    purchaser: {
+      firstName: '',
+      lastName: '',
+      email: ''
+    },
     link: '',
-    receiver: '',
-    allocater: '',
+    receiver: {
+      firstName: '',
+      lastName: '',
+      email: ''
+    },
+    allocater: {
+      firstName: '',
+      lastName: '',
+      email: ''
+    },
     created: '',
     state: '',
     ordered: '',
     expectedDelivery: '',
     trackingNumber: ''
   };
-
-  fullname = '';
 
   constructor(private parcelTrackingService: ParcelTrackingService, private userService: UserService, public activeModal: NgbActiveModal, public router: Router) { }
 
@@ -39,9 +49,6 @@ export class ParcelTrackingDetailComponent implements OnInit {
       this.parcel = data['one'];
       this.parcel.created = new Date(this.parcel.created).toLocaleString();
       try {this.parcel.ordered = new Date(this.parcel.ordered).toLocaleString();} catch (err) {}
-      this.userService.getFullName(this.parcel.purchaser).subscribe(async data => {
-        this.fullname = data['firstname'] + ' ' + data['lastname'];
-      });
     });
   }
 }
