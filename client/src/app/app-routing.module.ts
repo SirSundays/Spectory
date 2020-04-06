@@ -3,8 +3,10 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { AppAuthGuard } from './app.authguard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { OrderRequestOverviewComponent } from './components/order-request-overview/order-request-overview.component';
+import { ParcelTrackingOverviewComponent } from './components/parcel-tracking-overview/parcel-tracking-overview.component';
 
 const order_request = 'order-request'
+const parcelTracking = 'parcel-tracking'
 
 const appRoutes: Routes = [
   {
@@ -23,6 +25,17 @@ const appRoutes: Routes = [
     component: OrderRequestOverviewComponent,
     canActivate: [AppAuthGuard],
     data: { roles: ['basic'] }
+  },
+  {
+    path: parcelTracking + '/overview',
+    component: ParcelTrackingOverviewComponent,
+    canActivate: [AppAuthGuard],
+    data: { roles: ['basic'] }
+  },
+  {
+      path: '**',
+      redirectTo: '/dashboard',
+      pathMatch: 'full'
   }
  ];
 

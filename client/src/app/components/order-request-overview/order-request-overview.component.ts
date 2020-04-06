@@ -6,6 +6,7 @@ import { OrderRequestService } from 'src/app/service/order-request/order-request
 import { OrderRequestModalComponent } from '../order-request-modal/order-request-modal.component';
 import { OrderRequestDetailModalComponent } from '../order-request-detail-modal/order-request-detail-modal.component';
 import { OrderRequestProcessComponent } from '../order-request-process/order-request-process.component';
+import { OrderRequestAllocateComponent } from '../order-request-allocate/order-request-allocate.component';
 
 @Component({
   selector: 'app-order-request-overview',
@@ -40,5 +41,11 @@ export class OrderRequestOverviewComponent implements OnInit {
   showRequestProcess(id) {
     const modalRef = this.modalService.open(OrderRequestProcessComponent, {size: 'xl', backdrop: 'static', scrollable: true});
     modalRef.componentInstance.request_id = id;
+  }
+
+  showRequestAllocate(id, name) {
+    const modalRef = this.modalService.open(OrderRequestAllocateComponent, {size: 'xl', backdrop: 'static', scrollable: true});
+    modalRef.componentInstance.request_id = id;
+    modalRef.componentInstance.request_name = name;
   }
 }

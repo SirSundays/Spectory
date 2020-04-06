@@ -30,4 +30,12 @@ export class UserService {
       return [];
     }
   }
+
+  getAllBasicUser() {
+    return this.http.get(this.node_url + '/api/user/allBasicUser');
+  }
+
+  getAllPurchaserUser() {
+    return this.http.get(this.node_url + '/api/user/allPurchaserUser');
+  }
 }

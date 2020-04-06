@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ parcel.name }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p *ngIf="err">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let error of errMessage">
+            <strong>Warning!</strong> {{ error }}
+        </p>
+    </ngb-alert>
+</p>
+<div class="modal-body">
+    <ul class="list-group">
+        <li class="list-group-item">Name: {{ parcel.name }}</li>
+        <li class="list-group-item">Quantity: {{ parcel.quantity }}</li>
+        <li class="list-group-item">Price: {{ parcel.price }}€</li>
+        <li class="list-group-item">Shipping: {{ parcel.shipping }}€</li>
+        <li class="list-group-item">Link/Source: {{ parcel.link }}</li>
+        <li class="list-group-item">Purchaser: {{ parcel.purchaser }} | {{ fullname }}</li>
+        <li class="list-group-item">Receiver: {{ parcel.receiver }}</li>
+        <li class="list-group-item">Allocated by: {{ parcel.allocater }}</li>
+        <li class="list-group-item">Created: {{ parcel.created }}</li>
+        <li class="list-group-item">State: {{ parcel.state }}</li>
+        <div *ngIf="parcel.state == 'ordered' || parcel.state == 'received' || parcel.state == 'archived'">
+            <li class="list-group-item">Ordered: {{ parcel.ordered }}</li>
+            <li class="list-group-item">Expected Delivery: {{ parcel.expectedDelivery }}</li>
+            <li class="list-group-item">trackingNumber: {{ parcel.trackingNumber }}</li>
+        </div>
+    </ul>
+</div>

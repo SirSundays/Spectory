@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { NgSelectModule } from '@ng-select/ng-select';
+
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
@@ -23,13 +25,17 @@ import { OrderRequestModalComponent } from './components/order-request-modal/ord
 import { OrderRequestDetailModalComponent } from './components/order-request-detail-modal/order-request-detail-modal.component';
 import { OrderRequestProcessComponent } from './components/order-request-process/order-request-process.component';
 import { OrderRequestModalImportComponent } from './components/order-request-modal-import/order-request-modal-import.component';
+import { OrderRequestAllocateComponent } from './components/order-request-allocate/order-request-allocate.component';
+import { ParcelTrackingOverviewComponent } from './components/parcel-tracking-overview/parcel-tracking-overview.component';
+import { ParcelTrackingModalComponent } from './components/parcel-tracking-modal/parcel-tracking-modal.component';
+import { ParcelTrackingDetailComponent } from './components/parcel-tracking-detail/parcel-tracking-detail.component';
 
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent,
+    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +47,8 @@ let keycloakService: KeycloakService = new KeycloakService();
     NgbModule,
     FontAwesomeModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule
     ],
   providers: [
     {

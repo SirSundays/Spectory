@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const orderRequestSchema = mongoose.Schema({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    auto: true
+  },
   name: {
     type: String,
     required: [true, "Please Include name of your item"]
@@ -53,7 +57,7 @@ const orderRequestSchema = mongoose.Schema({
 
 orderRequestSchema.statics.getAll = async function () {
   try {
-    const all = await OrderRequest.find();
+    const all = await OrderRequest.find().sort({created: -1});
     return all;
   }
   catch (err) {

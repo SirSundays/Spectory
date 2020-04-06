@@ -25,6 +25,7 @@
                         <option value="accept">accepted</option>
                         <option value="decline">declined</option>
                         <option value="requested">requested</option>
+                        <option value="allocated">allocated</option>
                         <option value="archived">archived</option>
                     </select>
                 </div>
@@ -56,6 +57,7 @@
                     <span class="badge badge-success" *ngIf="request.state == 'accept'">accepted</span>
                     <span class="badge badge-light" *ngIf="request.state == 'ordered'">ordered</span>
                     <span class="badge badge-danger" *ngIf="request.state == 'decline'">declined</span>
+                    <span class="badge badge-info" *ngIf="request.state == 'allocated'">allocated</span>
                     <span class="badge badge-secondary" *ngIf="request.state == 'archived'">archived</span>
                 </td>
                 <td><button type="button" class="btn btn-dark btn-sm" (click)="import(request._id)">Import</button></td>

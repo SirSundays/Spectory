@@ -1,0 +1,50 @@
+<div class="card">
+    <form>
+        <div class="form-row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Search for user">
+            </div>
+            <div class="col">
+                <a (click)="addParcel()">
+                    <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">What?</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Receiver</th>
+            <th scope="col">Purchaser</th>
+            <th scope="col">State</th>
+            <th scope="col" *ngIf="roles.includes('admin')">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let parcel of all_parcels; index as i" class="request-row">
+            <th scope="row" (click)="showParcelDeatils(parcel._id)">{{ i + 1 }}</th>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.name }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.quantity | number }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.price | number }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.receiver }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.purchaser }}</td>
+            <td (click)="showParcelDeatils(parcel._id)">
+                <span class="badge badge-primary" *ngIf="parcel.state == 'requested'">requested</span>
+                <span class="badge badge-success" *ngIf="parcel.state == 'accept'">accepted</span>
+                <span class="badge badge-info" *ngIf="parcel.state == 'allocated'">allocated</span>
+                <span class="badge badge-light" *ngIf="parcel.state == 'ordered'">ordered</span>
+                <span class="badge badge-danger" *ngIf="parcel.state == 'decline'">declined</span>
+                <span class="badge badge-secondary" *ngIf="parcel.state == 'archived'">archived</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && parcel.state == 'requested'" (click)="showRequestProcess(parcel._id)">Process</button>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && parcel.state == 'accept'" (click)="showRequestAllocate(parcel._id, parcel.name)">Allocate</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

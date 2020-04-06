@@ -23,6 +23,7 @@ app.use(keycloak.middleware());
 
 //configure database and mongoose
 mongoose.set("useCreateIndex", true);
+mongoose.set("useUnifiedTopology", true);
 mongoose
   .connect(config.database, { useNewUrlParser: true })
   .then(() => {
@@ -43,11 +44,14 @@ app.use(bodyParser.json());
 
 app.use(morgan("dev")); // configire morgan
 
-const orderRequestRoutes = require("./api/order_request/route/order_request"); //bring in our user routes
+const orderRequestRoutes = require("./api/order_request/route/order_request");
 app.use("/api/order_request", orderRequestRoutes);
 
 const userRoutes = require("./api/user/route/user");
 app.use("/api/user", userRoutes);
+
+const parcelTrackingRoutes = require("./api/parcelTracking/route/parcelTracking");
+app.use("/api/parcelTracking", parcelTrackingRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is running on ${PORT}`);

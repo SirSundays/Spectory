@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./order-request-detail-modal.component.css']
 })
 export class OrderRequestDetailModalComponent implements OnInit {
-  requestForm;
   err = false;
   errMessage = [];
 
