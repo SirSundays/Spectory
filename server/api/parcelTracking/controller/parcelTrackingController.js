@@ -58,7 +58,7 @@ exports.getSearch = async function (req, res) {
                 res.status(201).json({ parcel_out });
             });
         } else {
-            let parcel_out = await ParcelTracking.find({name: { $regex: name, $options: 'i' }, orderRequest['name']: { $regex: name, $options: 'i' }}).populate('orderRequest');
+            let parcel_out = await ParcelTracking.find({name: { $regex: name, $options: 'i' }}).populate('orderRequest');
             res.status(201).json({ parcel_out });
         }
     }
