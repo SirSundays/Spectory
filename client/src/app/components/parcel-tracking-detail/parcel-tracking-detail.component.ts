@@ -49,6 +49,7 @@ export class ParcelTrackingDetailComponent implements OnInit {
       this.parcel = data['one'];
       this.parcel.created = new Date(this.parcel.created).toLocaleString();
       try {this.parcel.ordered = new Date(this.parcel.ordered).toLocaleString();} catch (err) {}
+      try {if (this.parcel.expectedDelivery != undefined) {this.parcel.expectedDelivery = new Date(this.parcel.expectedDelivery).toLocaleDateString()}} catch (err) {}
     });
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from 'src/app/service/user/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
 import { OrderRequestModalComponent } from '../order-request-modal/order-request-modal.component';
@@ -16,17 +17,26 @@ import { OrderRequestAllocateComponent } from '../order-request-allocate/order-r
 
 export class OrderRequestOverviewComponent implements OnInit {
 
-  constructor(private orderRequestService: OrderRequestService, private userService: UserService, private modalService: NgbModal) { }
+  constructor(private orderRequestService: OrderRequestService, private userService: UserService, private modalService: NgbModal, private route: ActivatedRoute) { }
 
   all_requests = [];
 
   roles = [];
+
+  id;
 
   ngOnInit(): void {
     this.orderRequestService.getAllRequests().subscribe(data => {
       this.all_requests = data['sendall'];
     });
     this.roles = this.userService.getUserRoles();
+
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      if (this.id != undefined) {
+        this.showRequestDeatils(this.id);
+      }
+    });
   }
 
   addRequest() {

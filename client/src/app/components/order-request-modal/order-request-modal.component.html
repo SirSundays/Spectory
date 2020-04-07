@@ -14,14 +14,18 @@
 <form [formGroup]="requestForm" (ngSubmit)="submitRequest(requestForm.value)">
     <div class="modal-body">
         <div class="input-group row">
-            <label for="name">Name*</label>
+            <div class="col-2">
+                <label for="name">Name*</label>
+            </div>
             <input id="name" type="text" class="form-control" formControlName="name" placeholder="Name *" required
                 minlength="1">
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left" ngbTooltip="What you want to order">
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="quantity">Quantity*</label>
+            <div class="col-2">
+                <label for="quantity">Quantity*</label>
+            </div>
             <input id="quantity" type="number" class="form-control" formControlName="quantity" placeholder="Quantity *"
                 min="1" required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
@@ -29,18 +33,22 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="price">Price*</label>
+            <div class="col-2">
+                <label for="price">Price*</label>
+            </div>
             <input id="price" type="number" class="form-control" formControlName="price" placeholder="Price in € *"
                 min="0.01" required step="0.01">
             <div class="input-group-prepend">
-                <div class="input-group-text">€</div>
+                <div class="input-group-text">€ ({{ requestForm.value.price / requestForm.value.quantity }}€ apiece)</div>
             </div>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
                 ngbTooltip="How much does the complete order cost excl. shipping">
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="shipping">Shipping*</label>
+            <div class="col-2">
+                <label for="shipping">Shipping*</label>
+            </div>
             <input id="shipping" type="number" class="form-control" formControlName="shipping"
                 placeholder="Shipping in € *" min="0.01" required step="0.01">
             <div class="input-group-prepend">
@@ -51,7 +59,9 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="reason">Reason*</label>
+            <div class="col-2">
+                <label for="reason">Reason*</label>
+            </div>
             <input id="reason" type="text" class="form-control" formControlName="reason" placeholder="Reason *" min="1"
                 required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
@@ -59,7 +69,9 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="link">Link*</label>
+            <div class="col-2">
+                <label for="link">Link*</label>
+            </div>
             <input id="link" type="text" class="form-control" formControlName="link" placeholder="Link *" min="1"
                 required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
@@ -67,7 +79,9 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="info">More info</label>
+            <div class="col-2">
+                <label for="info">More info</label>
+            </div>
             <input id="info" type="text" class="form-control" formControlName="info" placeholder="More information">
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
                 ngbTooltip="Do we need to know more? (Not required)">

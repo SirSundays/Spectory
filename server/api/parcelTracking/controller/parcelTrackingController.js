@@ -41,7 +41,30 @@ exports.getAll = async function (req, res) {
     }
     catch (err) {
         console.log(err);
-        res.status(400).json({ err: err })
+        res.status(400).json({ err: err });
+    }
+}
+
+exports.getSearch = async function (req, res) {
+    try {
+        let name = req.query.name;
+        let mine = req.query.mine;
+        let sort = req.query.sort;
+
+        if(mine === 'true') {
+            let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+            userController.emailToId(email, async function (id) {
+                let parcel_out = await ParcelTracking.find({name: { $regex: name, $options: 'i' }, mine: id}).populate('orderRequest');
+                res.status(201).json({ parcel_out });
+            });
+        } else {
+            let parcel_out = await ParcelTracking.find({name: { $regex: name, $options: 'i' }, orderRequest['name']: { $regex: name, $options: 'i' }}).populate('orderRequest');
+            res.status(201).json({ parcel_out });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).json({ err: err });
     }
 }
 
@@ -72,7 +95,7 @@ exports.getOneSpecific = async function (req, res) {
         });
     }
     catch (err) {
-        res.status(400).json({ err: err })
+        res.status(400).json({ err: err });
     }
 }
 
@@ -136,8 +159,8 @@ exports.updateParcelOrdered = async function (req, res) {
             }, {
                 new: true
             });
-            if (parcel.OrderRequest != undefined) {
-                Order_Request.findByIdAndUpdate(req.body.id, {
+            if (parcel.orderRequest != undefined) {
+                let update = await Order_Request.findByIdAndUpdate(parcel.orderRequest, {
                     state: 'ordered'
                 }, {
                     new: true
@@ -149,4 +172,67 @@ exports.updateParcelOrdered = async function (req, res) {
     catch (err) {
         res.status(400).json({ err: err });
     }
+}
+
+exports.updateParcelDelivered = async function (req, res) {
+    try {
+        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+        userController.emailToId(email, async function (id) {
+            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
+                state: 'archived',
+                ordered: Date.now()
+            }, {
+                new: true
+            });
+            if (parcel.orderRequest != undefined) {
+                let update = await Order_Request.findByIdAndUpdate(parcel.orderRequest, {
+                    state: 'archived'
+                }, {
+                    new: true
+                });
+            }
+            res.status(201).json({ parcel });
+        });
+    }
+    catch (err) {
+        res.status(400).json({ err: err });
+    }
+}
+
+exports.updateParcelTracking = async function (req, res) {
+    try {
+        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+        userController.emailToId(email, async function (id) {
+            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
+                trackingNumber: req.body.trackingnumber,
+            }, {
+                new: true
+            });
+            res.status(201).json({ parcel });
+        });
+    }
+    catch (err) {
+        res.status(400).json({ err: err });
+    }
+}
+
+exports.updateParcelExpectedDelivery = async function (req, res) {
+    try {
+        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+        userController.emailToId(email, async function (id) {
+            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
+                expectedDelivery: req.body.expectedDelivery,
+            }, {
+                new: true
+            });
+            res.status(201).json({ parcel });
+        });
+    }
+    catch (err) {
+        res.status(400).json({ err: err });
+    }
+}
+
+exports.updateParcelInvoice = async function (req, res) {
+    
 }

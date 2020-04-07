@@ -21,9 +21,9 @@ export class OrderRequestModalComponent implements OnInit {
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
       name: '',
-      quantity: '',
-      price: '',
-      shipping: '',
+      quantity: 0,
+      price: 0,
+      shipping: 0,
       reason: '',
       link: '',
       info: ''

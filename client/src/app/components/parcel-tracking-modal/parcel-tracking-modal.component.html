@@ -14,14 +14,18 @@
 <form [formGroup]="parcelForm" (ngSubmit)="submitParcel(parcelForm.value)">
     <div class="modal-body" style='height: 500px;'>
         <div class="input-group row">
-            <label for="name">Name*</label>
+            <div class="col-2">
+                <label for="name">Name*</label>
+            </div>
             <input id="name" type="text" class="form-control" formControlName="name" placeholder="Name *" required
                 minlength="1">
-            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left" ngbTooltip="What you want to order">
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right" ngbTooltip="What you want to order">
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="quantity">Quantity*</label>
+            <div class="col-2">
+                <label for="quantity">Quantity*</label>
+            </div>
             <input id="quantity" type="number" class="form-control" formControlName="quantity" placeholder="Quantity *"
                 min="1" required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
@@ -29,18 +33,22 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="price">Price*</label>
+            <div class="col-2">
+                <label for="price">Price*</label>
+            </div>
             <input id="price" type="number" class="form-control" formControlName="price" placeholder="Price in € *"
                 min="0.01" required step="0.01">
             <div class="input-group-prepend">
-                <div class="input-group-text">€</div>
+                <div class="input-group-text">€ ({{ parcelForm.value.price / parcelForm.value.quantity }}€ apiece)</div>
             </div>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
                 ngbTooltip="How much does the complete order cost excl. shipping">
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="shipping">Shipping*</label>
+            <div class="col-2">
+                <label for="shipping">Shipping*</label>
+            </div>
             <input id="shipping" type="number" class="form-control" formControlName="shipping"
                 placeholder="Shipping in € *" min="0.01" required step="0.01">
             <div class="input-group-prepend">
@@ -51,7 +59,9 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="link">Link*</label>
+            <div class="col-2">
+                <label for="link">Link*</label>
+            </div>
             <input id="link" type="text" class="form-control" formControlName="link" placeholder="Link *" min="1"
                 required>
             <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
@@ -59,18 +69,28 @@
             </fa-icon>
         </div>
         <div class="input-group row">
-            <label for="link">Purchaser*</label>
-            <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="id" formControlName="purchaser" required style="width: 90%;"></ng-select>
-            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
-                ngbTooltip="Who has to purchase this order">
-            </fa-icon>
+            <div class="col-2">
+                <label for="link">Purchaser*</label>
+            </div>
+            <div class="col">
+                <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="id" formControlName="purchaser"
+                    required></ng-select>
+                <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                    ngbTooltip="Who has to purchase this order">
+                </fa-icon>
+            </div>
         </div>
         <div class="input-group row">
-            <label for="link">Receiver*</label>
-            <ng-select [items]="allBasicUser" bindLabel="fullName" bindValue="id" formControlName="receiver" required style="width: 90%;"></ng-select>
-            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
-                ngbTooltip="To whom goes this order">
-            </fa-icon>
+            <div class="col-2">
+                <label for="link">Receiver*</label>
+            </div>
+            <div class="col">
+                <ng-select [items]="allBasicUser" bindLabel="fullName" bindValue="id" formControlName="receiver"
+                    required></ng-select>
+                <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                    ngbTooltip="To whom goes this order">
+                </fa-icon>
+            </div>
         </div>
     </div>
     <div class="modal-footer">

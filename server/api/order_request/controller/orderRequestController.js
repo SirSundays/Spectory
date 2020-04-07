@@ -9,7 +9,14 @@ exports.getAll = async function (req, res) {
             sendall[i] = request;
             userController.idToUser(request.user, async function (user) {
                 sendall[i].user = user;
-                if (sendall.length === all.length) {
+                sendall[i].finished = true;
+                allFinished = true;
+                sendall.forEach(request => {
+                    if (!request.finished) {
+                        allFinished = false;
+                    }
+                });
+                if (sendall.length === all.length && allFinished) {
                     res.status(201).json({ sendall });
                 }
             });
@@ -23,7 +30,7 @@ exports.getAll = async function (req, res) {
 exports.getOneSpecific = async function (req, res) {
     try {
         const one = await Order_Request.findOne({ _id: req.query.req_id });
-        userController.idToUser(one.user, async function(user) {
+        userController.idToUser(one.user, async function (user) {
             one.user = user;
             res.status(201).json({ one });
         });

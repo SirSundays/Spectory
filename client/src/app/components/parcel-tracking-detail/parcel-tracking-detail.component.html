@@ -26,7 +26,7 @@
         <div *ngIf="parcel.state == 'ordered' || parcel.state == 'received' || parcel.state == 'archived'">
             <li class="list-group-item">Ordered: {{ parcel.ordered }}</li>
             <li class="list-group-item">Expected Delivery: {{ parcel.expectedDelivery }}</li>
-            <li class="list-group-item">trackingNumber: {{ parcel.trackingNumber }}</li>
+            <li class="list-group-item">Tracking-Link: {{ parcel.trackingNumber }}</li>
         </div>
     </ul>
 </div>

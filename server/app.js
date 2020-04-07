@@ -24,6 +24,7 @@ app.use(keycloak.middleware());
 //configure database and mongoose
 mongoose.set("useCreateIndex", true);
 mongoose.set("useUnifiedTopology", true);
+mongoose.set('useFindAndModify', false);
 mongoose
   .connect(config.database, { useNewUrlParser: true })
   .then(() => {

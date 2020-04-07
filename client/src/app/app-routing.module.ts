@@ -27,7 +27,19 @@ const appRoutes: Routes = [
     data: { roles: ['basic'] }
   },
   {
+    path: order_request + '/overview/:id',
+    component: OrderRequestOverviewComponent,
+    canActivate: [AppAuthGuard],
+    data: { roles: ['basic'] }
+  },
+  {
     path: parcelTracking + '/overview',
+    component: ParcelTrackingOverviewComponent,
+    canActivate: [AppAuthGuard],
+    data: { roles: ['basic'] }
+  },
+  {
+    path: parcelTracking + '/overview/:id',
     component: ParcelTrackingOverviewComponent,
     canActivate: [AppAuthGuard],
     data: { roles: ['basic'] }

@@ -29,13 +29,14 @@ import { OrderRequestAllocateComponent } from './components/order-request-alloca
 import { ParcelTrackingOverviewComponent } from './components/parcel-tracking-overview/parcel-tracking-overview.component';
 import { ParcelTrackingModalComponent } from './components/parcel-tracking-modal/parcel-tracking-modal.component';
 import { ParcelTrackingDetailComponent } from './components/parcel-tracking-detail/parcel-tracking-detail.component';
+import { ParcelTrackingMoreInfoComponent } from './components/parcel-tracking-more-info/parcel-tracking-more-info.component';
 
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent,
+    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent, ParcelTrackingMoreInfoComponent,
   ],
   imports: [
     BrowserModule,

@@ -16,3 +16,8 @@
     left: 0;
     margin-left: 1%;
 }
+
+.col-2 label {
+    text-align: center;
+    width: 100%;
+}
