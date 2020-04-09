@@ -1,5 +1,5 @@
 <div class="card">
-    <form [formGroup]="searchForm">
+    <form [formGroup]="searchForm" (ngSubmit)="searchParcels(searchForm.value)">
         <div class="form-row">
             <div class="col">
                 <input id="name" type="text" class="form-control" formControlName="name"
@@ -7,7 +7,7 @@
             </div>
             <div class="col">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" formControlName="mine" id="defaultCheck1">
                     <label class="form-check-label" for="defaultCheck1">
                         Only mine
                     </label>
@@ -15,10 +15,10 @@
             </div>
             <div class="col">
                 <select class="form-control" id="sort" formControlName="sort">
-                    <option value="created_asc">Created Ascending</option>
-                    <option value="created_desc">Created Descending</option>
-                    <option value="name_asc">Name Ascending</option>
-                    <option value="name_desc">Name Descending</option>
+                    <option value="created ASC">Created Ascending</option>
+                    <option value="created DESC">Created Descending</option>
+                    <option value="name ASC">Name Ascending</option>
+                    <option value="name DESC">Name Descending</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
@@ -47,20 +47,21 @@
             <th scope="col">Receiver</th>
             <th scope="col">Purchaser</th>
             <th scope="col">State</th>
-            <th scope="col" *ngIf="roles.includes('purchaser')">Action</th>
+            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
+        <p *ngIf="all_parcels.length === 0" style="text-align: center;">Nothing found</p>
         <tr *ngFor="let parcel of all_parcels; index as i" class="request-row">
-            <th scope="row" (click)="showParcelDeatils(parcel._id)">{{ i + 1 }}</th>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.name }}</td>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.quantity | number }}</td>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.price | number }}</td>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.receiver.firstName }} {{parcel.receiver.lastName }}
+            <th scope="row" (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ i + 1 }}</th>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ parcel.name }}</td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ parcel.quantity | number }}</td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ parcel.price | number }}</td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)"><a href="mailto:{{ parcel.receiverEmail }}">{{ parcel.receiverFirstName }} {{parcel.receiverLastName }}</a>
             </td>
-            <td (click)="showParcelDeatils(parcel._id)">{{ parcel.purchaser.firstName }} {{parcel.purchaser.lastName }}
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)"><a href="mailto:{{ parcel.purchaserEmail }}">{{ parcel.purchaserFirstName }} {{parcel.purchaserLastName }}</a>
             </td>
-            <td (click)="showParcelDeatils(parcel._id)">
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">
                 <span class="badge badge-primary" *ngIf="parcel.state == 'requested'">requested</span>
                 <span class="badge badge-success" *ngIf="parcel.state == 'accept'">accepted</span>
                 <span class="badge badge-info" *ngIf="parcel.state == 'allocated'">allocated</span>
@@ -70,14 +71,14 @@
             </td>
             <td>
                 <button type="button" class="btn btn-dark"
-                    *ngIf="roles.includes('purchaser') && parcel.state == 'allocated' && parcel.purchaser.email == myMail"
-                    (click)="parcelOrdered(parcel._id, parcel.name)">Ordered</button>
+                    *ngIf="roles.includes('purchaser') && parcel.state == 'allocated' && parcel.purchaserEmail == myMail"
+                    (click)="parcelOrdered(parcel.ParcelOrderItemId, parcel.name)">Ordered</button>
                 <button type="button" class="btn btn-dark"
-                    *ngIf="roles.includes('purchaser') && parcel.state == 'ordered' && parcel.purchaser.email == myMail"
-                    (click)="showParcelMoreInfo(parcel._id, parcel.name)">Add more info</button>
+                    *ngIf="roles.includes('purchaser') && parcel.state == 'ordered' && parcel.purchaserEmail == myMail"
+                    (click)="showParcelMoreInfo(parcel.ParcelOrderItemId, parcel.name)">Add more info</button>
                 <button type="button" class="btn btn-dark"
-                    *ngIf="roles.includes('basic') && parcel.state == 'ordered' && parcel.receiver.email == myMail"
-                    (click)="parcelDelivered(parcel._id, parcel.name)">Received</button>
+                    *ngIf="roles.includes('basic') && parcel.state == 'ordered' && parcel.receiverEmail == myMail"
+                    (click)="parcelDelivered(parcel.ParcelOrderItemId, parcel.name)">Received</button>
             </td>
         </tr>
     </tbody>

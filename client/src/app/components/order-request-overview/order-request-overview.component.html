@@ -26,12 +26,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let request of all_requests; index as i" class="request-row">
-            <th scope="row" (click)="showRequestDeatils(request._id)">{{ i + 1 }}</th>
-            <td (click)="showRequestDeatils(request._id)">{{ request.name }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.quantity | number }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.price | number }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.user.firstName }} {{request.user.lastName }}</td>
-            <td (click)="showRequestDeatils(request._id)">
+            <th scope="row" (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ i + 1 }}</th>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.name }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.quantity | number }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.price | number }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.requesterFirstName }} {{request.requesterLastName }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">
                 <span class="badge badge-primary" *ngIf="request.state == 'requested'">requested</span>
                 <span class="badge badge-success" *ngIf="request.state == 'accept'">accepted</span>
                 <span class="badge badge-info" *ngIf="request.state == 'allocated'">allocated</span>
@@ -40,8 +40,8 @@
                 <span class="badge badge-secondary" *ngIf="request.state == 'archived'">archived</span>
             </td>
             <td>
-                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'requested'" (click)="showRequestProcess(request._id)">Process</button>
-                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'accept'" (click)="showRequestAllocate(request._id, request.name)">Allocate</button>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'requested'" (click)="showRequestProcess(request.ParcelOrderItemId)">Process</button>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'accept'" (click)="showRequestAllocate(request.ParcelOrderItemId, request.name)">Allocate</button>
             </td>
         </tr>
     </tbody>

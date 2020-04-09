@@ -1,4 +1,4 @@
-const User = require('../model/User');
+const userController = require('../controller/userController');
 
 let adminClient = require('../../../_edited_node_modules/keycloak-admin-client');
 
@@ -11,6 +11,7 @@ let settings = {
 };
 
 exports.searchAllBasicUser = async function (req, res) {
+    // very slow
     try {
         adminClient(settings)
             .then((client) => {
@@ -29,17 +30,16 @@ exports.searchAllBasicUser = async function (req, res) {
                 });
             })
             .catch((err) => {
-                console.log(err);
-                res.status(400).json({ err: err })
+                res.status(400).json({ err: err });
             });
     }
     catch (err) {
-        console.log(err);
-        res.status(400).json({ err: err })
+        res.status(400).json({ err: err });
     }
 }
 
 exports.searchAllPurchaserUser = async function (req, res) {
+    // very slow
     try {
         adminClient(settings)
             .then((client) => {
@@ -68,7 +68,8 @@ exports.searchAllPurchaserUser = async function (req, res) {
     }
 }
 
-exports.emailToId = async function(email, further) {
+exports.emailToId = async function (email, further) {
+    // very slow
     try {
         adminClient(settings)
             .then((client) => {
@@ -88,7 +89,8 @@ exports.emailToId = async function(email, further) {
     }
 }
 
-exports.idToUser = async function(id, further) {
+exports.idToUser = async function (id, further) {
+    
     try {
         adminClient(settings)
             .then((client) => {

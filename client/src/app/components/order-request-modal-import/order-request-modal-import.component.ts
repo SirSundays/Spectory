@@ -52,7 +52,7 @@ export class OrderRequestModalImportComponent implements OnInit {
   import(id) {
     if (confirm("Are you sure you want to import this request? This will override all fields!")) {
       this.search_requests.forEach(request => {
-        if (request._id = id) {
+        if (request.ParcelOrderItemId = id) {
           this.activeModal.close(request);
         }
       });

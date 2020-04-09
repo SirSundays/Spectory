@@ -18,9 +18,9 @@
         <li class="list-group-item">Price: {{ parcel.price }}€</li>
         <li class="list-group-item">Shipping: {{ parcel.shipping }}€</li>
         <li class="list-group-item">Link/Source: {{ parcel.link }}</li>
-        <li class="list-group-item">Purchaser: <a href="mailto:{{parcel.purchaser.email}}">{{ parcel.purchaser.firstName }} {{parcel.purchaser.lastName }}</a></li>
-        <li class="list-group-item">Receiver: <a href="mailto:{{parcel.receiver.email}}">{{ parcel.receiver.firstName }} {{parcel.receiver.lastName }}</a></li>
-        <li class="list-group-item">Allocated by: <a href="mailto:{{parcel.allocater.email}}">{{ parcel.allocater.firstName }} {{parcel.allocater.lastName }}</a></li>
+        <li class="list-group-item">Purchaser: <a href="mailto:{{parcel.purchaserEmail}}">{{ parcel.purchaserFirstName }} {{parcel.purchaserLastName }}</a></li>
+        <li class="list-group-item">Receiver: <a href="mailto:{{parcel.receiverEmail}}">{{ parcel.receiverFirstName }} {{parcel.receiverLastName }}</a></li>
+        <li class="list-group-item">Allocated by: <a href="mailto:{{parcel.allocaterEmail}}">{{ parcel.allocaterFirstName }} {{parcel.allocaterLastName }}</a></li>
         <li class="list-group-item">Created: {{ parcel.created }}</li>
         <li class="list-group-item">State: {{ parcel.state }}</li>
         <div *ngIf="parcel.state == 'ordered' || parcel.state == 'received' || parcel.state == 'archived'">

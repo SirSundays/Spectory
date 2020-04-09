@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from './service/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class AppComponent implements OnInit {
   userDetails: KeycloakProfile;
 
-  constructor(private keycloakService: KeycloakService, public route: ActivatedRoute) {
+  constructor(private keycloakService: KeycloakService, public route: ActivatedRoute, private userService: UserService) {
     
   }
 

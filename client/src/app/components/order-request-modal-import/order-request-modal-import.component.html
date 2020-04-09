@@ -47,12 +47,12 @@
         </thead>
         <tbody>
             <tr *ngFor="let request of search_requests; index as i" class="request-row">
-                <th scope="row" (click)="showRequestDeatils(request._id)">{{ i + 1 }}</th>
-                <td (click)="showRequestDeatils(request._id)">{{ request.name }}</td>
-                <td (click)="showRequestDeatils(request._id)">{{ request.quantity | number }}</td>
-                <td (click)="showRequestDeatils(request._id)">{{ request.price | number }}</td>
-                <td (click)="showRequestDeatils(request._id)">{{ request.user }}</td>
-                <td (click)="showRequestDeatils(request._id)">
+                <th scope="row" (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ i + 1 }}</th>
+                <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.name }}</td>
+                <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.quantity | number }}</td>
+                <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.price | number }}</td>
+                <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.requesterFirstName }} {{request.requesterLastName }}</td>
+                <td (click)="showRequestDeatils(request.ParcelOrderItemId)">
                     <span class="badge badge-primary" *ngIf="request.state == 'requested'">requested</span>
                     <span class="badge badge-success" *ngIf="request.state == 'accept'">accepted</span>
                     <span class="badge badge-light" *ngIf="request.state == 'ordered'">ordered</span>
@@ -60,12 +60,11 @@
                     <span class="badge badge-info" *ngIf="request.state == 'allocated'">allocated</span>
                     <span class="badge badge-secondary" *ngIf="request.state == 'archived'">archived</span>
                 </td>
-                <td><button type="button" class="btn btn-dark btn-sm" (click)="import(request._id)">Import</button></td>
+                <td><button type="button" class="btn btn-dark btn-sm" (click)="import(request.ParcelOrderItemId)">Import</button></td>
             </tr>
         </tbody>
     </table>
     <span *ngIf="search_requests.length == 0">Nothing found</span>
 </div>
 <div class="modal-footer">
-
 </div>

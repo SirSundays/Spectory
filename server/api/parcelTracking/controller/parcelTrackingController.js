@@ -1,47 +1,33 @@
-const ParcelTracking = require("../model/ParcelTracking");
-const Order_Request = require('../../order_request/model/Order_request');
 const userController = require('../../user/controller/userController');
 
 exports.getAll = async function (req, res) {
     try {
-        const all = await ParcelTracking.find().sort({ created: -1 }).populate('orderRequest');
-        all.forEach(async function (parcel, i, parcel_out) {
-            parcel_out[i] = {};
-            parcel_out[i] = parcel;
-            parcel_out[i].finished = false;
-            if (parcel.orderRequest != undefined) {
-                // for allocated request
-                parcel_out[i].name = parcel.orderRequest.name;
-                parcel_out[i].quantity = parcel.orderRequest.quantity;
-                parcel_out[i].price = parcel.orderRequest.price;
-                parcel_out[i].shipping = parcel.orderRequest.shipping;
-                parcel_out[i].link = parcel.orderRequest.link;
-                parcel_out[i].receiver = parcel.orderRequest.user;
-                delete parcel_out[i].orderRequest;
+        spectoryDb.execute(`
+        SELECT poi.*, pt.*, 
+        purchaser.FIRST_NAME AS purchaserFirstName, purchaser.LAST_NAME AS purchaserLastName, purchaser.EMAIL  AS purchaserEmail,
+        allocater.FIRST_NAME AS allocaterFirstName, allocater.LAST_NAME AS allocaterLastName, allocater.EMAIL  AS allocaterEmail,
+        receiver.FIRST_NAME AS receiverFirstName, receiver.LAST_NAME AS receiverLastName, receiver.EMAIL  AS receiverEmail
+        FROM parcelorderitem poi, parceltracking pt 
+        JOIN user_entity AS purchaser
+            ON purchaser.ID = pt.purchaserId
+        JOIN user_entity AS allocater
+            ON allocater.ID = pt.allocaterId
+        JOIN user_entity AS receiver
+            ON receiver.ID = pt.receiverId
+        WHERE poi.ParcelOrderItemId = pt.ParcelOrderItemId
+        ORDER BY poi.created DESC
+        `, [], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
             } else {
-                // for parceltrack only
+                res.status(201).json({ results });
             }
-            userController.idToUser(parcel.receiver, function (user) {
-                parcel_out[i].receiver = user;
-                userController.idToUser(parcel.purchaser, function (user) {
-                    parcel_out[i].purchaser = user;
-                    parcel_out[i].finished = true;
-                    allFinished = true;
-                    parcel_out.forEach(parcel => {
-                        if (!parcel.finished) {
-                            allFinished = false;
-                        }
-                    });
-                    if (parcel_out.length === all.length && allFinished) {
-                        res.status(201).json({ parcel_out });
-                    }
-                });
-            });
-        });
+        }
+        );
     }
     catch (err) {
         console.log(err);
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
@@ -51,51 +37,91 @@ exports.getSearch = async function (req, res) {
         let mine = req.query.mine;
         let sort = req.query.sort;
 
-        if(mine === 'true') {
+        if (mine === 'true') {
             let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
             userController.emailToId(email, async function (id) {
-                let parcel_out = await ParcelTracking.find({name: { $regex: name, $options: 'i' }, mine: id}).populate('orderRequest');
-                res.status(201).json({ parcel_out });
+                spectoryDb.execute(`
+                SELECT poi.*, pt.*, 
+                purchaser.FIRST_NAME AS purchaserFirstName, purchaser.LAST_NAME AS purchaserLastName, purchaser.EMAIL  AS purchaserEmail,
+                allocater.FIRST_NAME AS allocaterFirstName, allocater.LAST_NAME AS allocaterLastName, allocater.EMAIL  AS allocaterEmail,
+                receiver.FIRST_NAME AS receiverFirstName, receiver.LAST_NAME AS receiverLastName, receiver.EMAIL  AS receiverEmail
+                FROM parcelorderitem poi, parceltracking pt 
+                JOIN user_entity AS purchaser
+                    ON purchaser.ID = pt.purchaserId
+                JOIN user_entity AS allocater
+                    ON allocater.ID = pt.allocaterId
+                JOIN user_entity AS receiver
+                    ON receiver.ID = pt.receiverId
+                WHERE poi.ParcelOrderItemId = pt.ParcelOrderItemId AND
+                (purchaser.ID = ? OR allocater.ID = ? OR receiver.ID = ?) AND
+                poi.name LIKE "%${name}%"
+                ORDER BY poi.${sort}
+                `, [id, id, id], (err, results) => {
+                    if (err) {
+                        res.status(400).json({ err });
+                    } else {
+                        res.status(201).json({ results });
+                    }
+                });
             });
         } else {
-            let parcel_out = await ParcelTracking.find({name: { $regex: name, $options: 'i' }}).populate('orderRequest');
-            res.status(201).json({ parcel_out });
+            spectoryDb.execute(`
+                SELECT poi.*, pt.*, 
+                purchaser.FIRST_NAME AS purchaserFirstName, purchaser.LAST_NAME AS purchaserLastName, purchaser.EMAIL  AS purchaserEmail,
+                allocater.FIRST_NAME AS allocaterFirstName, allocater.LAST_NAME AS allocaterLastName, allocater.EMAIL  AS allocaterEmail,
+                receiver.FIRST_NAME AS receiverFirstName, receiver.LAST_NAME AS receiverLastName, receiver.EMAIL  AS receiverEmail
+                FROM parcelorderitem poi, parceltracking pt 
+                JOIN user_entity AS purchaser
+                    ON purchaser.ID = pt.purchaserId
+                JOIN user_entity AS allocater
+                    ON allocater.ID = pt.allocaterId
+                JOIN user_entity AS receiver
+                    ON receiver.ID = pt.receiverId
+                WHERE poi.ParcelOrderItemId = pt.ParcelOrderItemId AND
+                poi.name LIKE "%${name}%"
+                ORDER BY poi.${sort}
+                `, [], (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json({ results });
+                }
+            });
         }
     }
     catch (err) {
         console.log(err);
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
 exports.getOneSpecific = async function (req, res) {
     try {
-        const one = await ParcelTracking.findOne({ _id: req.query.parcel_id }).populate('orderRequest');
-        if (one.orderRequest != undefined) {
-            // for allocated request
-            one.name = one.orderRequest.name;
-            one.quantity = one.orderRequest.quantity;
-            one.price = one.orderRequest.price;
-            one.shipping = one.orderRequest.shipping;
-            one.link = one.orderRequest.link;
-            one.receiver = one.orderRequest.user;
-            delete one.orderRequest;
-        } else {
-            // for parceltrack only
+        spectoryDb.execute(`
+        SELECT poi.*, pt.*, 
+        purchaser.FIRST_NAME AS purchaserFirstName, purchaser.LAST_NAME AS purchaserLastName, purchaser.EMAIL  AS purchaserEmail,
+        allocater.FIRST_NAME AS allocaterFirstName, allocater.LAST_NAME AS allocaterLastName, allocater.EMAIL  AS allocaterEmail,
+        receiver.FIRST_NAME AS receiverFirstName, receiver.LAST_NAME AS receiverLastName, receiver.EMAIL  AS receiverEmail
+        FROM parcelorderitem poi, parceltracking pt 
+        JOIN user_entity AS purchaser
+            ON purchaser.ID = pt.purchaserId
+        JOIN user_entity AS allocater
+            ON allocater.ID = pt.allocaterId
+        JOIN user_entity AS receiver
+            ON receiver.ID = pt.receiverId
+        WHERE poi.ParcelOrderItemId = pt.ParcelOrderItemId AND poi.ParcelOrderItemId = ?
+        `, [req.query.parcel_id], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                results = results[0];
+                res.status(201).json({ results });
+            }
         }
-        userController.idToUser(one.receiver, function (user) {
-            one.receiver = user;
-            userController.idToUser(one.purchaser, function (user) {
-                one.purchaser = user;
-                userController.idToUser(one.allocater, function (user) {
-                    one.allocater = user;
-                    res.status(201).json({ one });
-                });
-            });
-        });
+        );
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
@@ -120,119 +146,122 @@ exports.newRequestAllocate = async function (req, res) {
         });
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
 exports.newParcel = async function (req, res) {
     try {
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        userController.emailToId(email, async function (id) {
-            const parcel = new ParcelTracking({
-                name: req.body.name,
-                quantity: req.body.quantity,
-                price: req.body.price,
-                shipping: req.body.shipping,
-                link: req.body.link,
-                created: Date.now(),
-                allocater: id,
-                state: 'allocated',
-                purchaser: req.body.purchaser,
-                receiver: req.body.receiver
-            });
-            let data = await parcel.save();
-            res.status(201).json({ data });
-        });
+        spectoryDb.execute(
+            'INSERT INTO `parcelorderitem`(`name`, `quantity`, `price`, `shipping`, `link`, `state`, `created`) VALUES (?,?,?,?,?,?,?)',
+            [req.body.name, req.body.quantity, req.body.price, req.body.shipping, req.body.link, 'allocated', Date.now()],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    let newParcelOrderItemId = results.insertId;
+                    userController.emailToId(email, async function (id) {
+                        spectoryDb.execute(
+                            'INSERT INTO `parceltracking`(`purchaserId`, `allocaterId`, `receiverId`, `ParcelOrderItemId`) VALUES (?,?,?,?)',
+                            [req.body.purchaser, id, req.body.receiver, newParcelOrderItemId],
+                            (err, results) => {
+                                if (err) {
+                                    res.status(400).json({ err });
+                                }
+                                res.status(201).json('success');
+                            }
+                        );
+                    });
+                }
+            }
+        );
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
 exports.updateParcelOrdered = async function (req, res) {
     try {
-        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        userController.emailToId(email, async function (id) {
-            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
-                state: 'ordered',
-                ordered: Date.now()
-            }, {
-                new: true
+        // further validation could be added eg did the purchaser send this request
+        spectoryDb.execute("UPDATE parcelorderitem SET state='ordered' WHERE ParcelOrderItemId = ?",
+            [req.body.id],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    spectoryDb.execute("UPDATE parceltracking SET ordered=? WHERE ParcelOrderItemId = ?",
+                        [Date.now(), req.body.id],
+                        (err, results) => {
+                            if (err) {
+                                res.status(400).json({ err });
+                            }
+                            res.status(201).json('success');
+                        });
+                }
             });
-            if (parcel.orderRequest != undefined) {
-                let update = await Order_Request.findByIdAndUpdate(parcel.orderRequest, {
-                    state: 'ordered'
-                }, {
-                    new: true
-                });
-            }
-            res.status(201).json({ parcel });
-        });
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        console.log(err);
+        res.status(400).json({ err });
     }
 }
 
 exports.updateParcelDelivered = async function (req, res) {
     try {
-        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        userController.emailToId(email, async function (id) {
-            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
-                state: 'archived',
-                ordered: Date.now()
-            }, {
-                new: true
+        // further validation could be added eg did the receiver send this request
+        spectoryDb.execute("UPDATE parcelorderitem SET state='archived' WHERE ParcelOrderItemId = ?",
+            [req.body.id],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json('success');
+                }
             });
-            if (parcel.orderRequest != undefined) {
-                let update = await Order_Request.findByIdAndUpdate(parcel.orderRequest, {
-                    state: 'archived'
-                }, {
-                    new: true
-                });
-            }
-            res.status(201).json({ parcel });
-        });
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
 exports.updateParcelTracking = async function (req, res) {
     try {
-        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        userController.emailToId(email, async function (id) {
-            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
-                trackingNumber: req.body.trackingnumber,
-            }, {
-                new: true
+        // further validation could be added eg did the purchaser send this request
+        spectoryDb.execute("UPDATE parceltracking SET trackingNumber=? WHERE ParcelOrderItemId = ?",
+            [req.body.trackingnumber, req.body.id],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json('success');
+                }
             });
-            res.status(201).json({ parcel });
-        });
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
 exports.updateParcelExpectedDelivery = async function (req, res) {
     try {
-        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        userController.emailToId(email, async function (id) {
-            let parcel = await ParcelTracking.findByIdAndUpdate(req.body.id, {
-                expectedDelivery: req.body.expectedDelivery,
-            }, {
-                new: true
+        // further validation could be added eg did the purchaser send this request
+        spectoryDb.execute("UPDATE parceltracking SET expectedDelivery=? WHERE ParcelOrderItemId = ?",
+            [req.body.expectedDelivery, req.body.id],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json('success');
+                }
             });
-            res.status(201).json({ parcel });
-        });
     }
     catch (err) {
-        res.status(400).json({ err: err });
+        res.status(400).json({ err });
     }
 }
 
 exports.updateParcelInvoice = async function (req, res) {
-    
+
 }

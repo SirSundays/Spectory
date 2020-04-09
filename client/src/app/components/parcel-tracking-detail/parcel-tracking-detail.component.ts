@@ -19,22 +19,19 @@ export class ParcelTrackingDetailComponent implements OnInit {
     quantity: '',
     price: '',
     shipping: '',
-    purchaser: {
-      firstName: '',
-      lastName: '',
-      email: ''
-    },
+    purchaser: '',
+    purchaserFirstName: '',
+    purchaserLastName: '',
+    purchaserEmail: '',
     link: '',
-    receiver: {
-      firstName: '',
-      lastName: '',
-      email: ''
-    },
-    allocater: {
-      firstName: '',
-      lastName: '',
-      email: ''
-    },
+    receiver: '',
+    receiverFirstName: '',
+    receiverLastName: '',
+    receiverEmail: '',
+    allocater: '',
+    allocaterFirstName: '',
+    allocaterLastName: '',
+    allocaterEmail: '',
     created: '',
     state: '',
     ordered: '',
@@ -45,11 +42,11 @@ export class ParcelTrackingDetailComponent implements OnInit {
   constructor(private parcelTrackingService: ParcelTrackingService, private userService: UserService, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
-    this.parcelTrackingService.getOneSpecificParcel(this.parcel_id).subscribe( async data => {
-      this.parcel = data['one'];
-      this.parcel.created = new Date(this.parcel.created).toLocaleString();
-      try {this.parcel.ordered = new Date(this.parcel.ordered).toLocaleString();} catch (err) {}
-      try {if (this.parcel.expectedDelivery != undefined) {this.parcel.expectedDelivery = new Date(this.parcel.expectedDelivery).toLocaleDateString()}} catch (err) {}
+    this.parcelTrackingService.getOneSpecificParcel(this.parcel_id).subscribe(async data => {
+      this.parcel = data['results'];
+      this.parcel.created = new Date(parseInt(this.parcel.created)).toLocaleString();
+      try { this.parcel.ordered = new Date(parseInt(this.parcel.ordered)).toLocaleString(); } catch (err) { }
+      try { if (this.parcel.expectedDelivery != '') { this.parcel.expectedDelivery = new Date(parseInt(this.parcel.expectedDelivery)).toLocaleDateString() } } catch (err) { }
     });
   }
 }

@@ -33,10 +33,10 @@ export class ParcelTrackingOverviewComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       name: '',
       mine: false,
-      sort: 'created_asc'
+      sort: 'created DESC'
     });
     this.parcelTrackingService.getAllParcels().subscribe(data => {
-      this.all_parcels = data['parcel_out'];
+      this.all_parcels = data['results'];
     });
     this.roles = this.userService.getUserRoles();
     this.myMail = await this.userService.getOwnEmail();
@@ -85,7 +85,7 @@ export class ParcelTrackingOverviewComponent implements OnInit {
 
   searchParcels(search) {
     this.parcelTrackingService.getAllParcelsSearch(search).subscribe(data => {
-      console.log(data);
+      this.all_parcels = data['results'];
     });
   }
 

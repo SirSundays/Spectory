@@ -22,20 +22,19 @@ export class OrderRequestDetailModalComponent implements OnInit {
     reason: '',
     link: '',
     info: '',
-    user: {
-      firstName: '',
-      lastName: '',
-      email: ''
-    },
+    user: '',
+    requesterFirstName: '',
+    requesterLastName: '',
+    requesterEmail: '',
     created: ''
   };
 
   constructor(private orderRequestService: OrderRequestService, private userService: UserService, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
-    this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe( async data => {
-      this.request = data['one'];
-      this.request.created = new Date(this.request.created).toLocaleString();
+    this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe(async data => {
+      this.request = data['results'];
+      this.request.created = new Date(parseInt(this.request.created)).toLocaleString();
     });
   }
 }

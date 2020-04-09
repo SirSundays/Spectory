@@ -64,7 +64,7 @@ export class ParcelTrackingMoreInfoComponent implements OnInit {
       invoice: [{value: '', disabled: true}]
     });
     this.parcelTrackingService.getOneSpecificParcel(this.parcel_id).subscribe( async data => {
-      this.parcel = data['one'];
+      this.parcel = data['results'];
       let date: NgbDate;
       try {
         let tmp_date = new Date(this.parcel.expectedDelivery);
