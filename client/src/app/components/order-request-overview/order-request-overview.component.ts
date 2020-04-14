@@ -8,6 +8,8 @@ import { OrderRequestModalComponent } from '../order-request-modal/order-request
 import { OrderRequestDetailModalComponent } from '../order-request-detail-modal/order-request-detail-modal.component';
 import { OrderRequestProcessComponent } from '../order-request-process/order-request-process.component';
 import { OrderRequestAllocateComponent } from '../order-request-allocate/order-request-allocate.component';
+import { ParcelTrackingDetailComponent } from '../parcel-tracking-detail/parcel-tracking-detail.component';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-order-request-overview',
@@ -17,7 +19,7 @@ import { OrderRequestAllocateComponent } from '../order-request-allocate/order-r
 
 export class OrderRequestOverviewComponent implements OnInit {
 
-  constructor(private orderRequestService: OrderRequestService, private userService: UserService, private modalService: NgbModal, private route: ActivatedRoute) { }
+  constructor(private orderRequestService: OrderRequestService, private formBuilder: FormBuilder, private userService: UserService, private modalService: NgbModal, private route: ActivatedRoute) { }
 
   all_requests = [];
 
@@ -25,7 +27,15 @@ export class OrderRequestOverviewComponent implements OnInit {
 
   id;
 
+  searchForm;
+
   ngOnInit(): void {
+    this.searchForm = this.formBuilder.group({
+      name: '',
+      mine: false,
+      sort: 'created DESC'
+    });
+
     this.orderRequestService.getAllRequests().subscribe(data => {
       this.all_requests = data['results'];
     });
@@ -40,22 +50,38 @@ export class OrderRequestOverviewComponent implements OnInit {
   }
 
   addRequest() {
-    const modalRef = this.modalService.open(OrderRequestModalComponent, {size: 'xl', backdrop: 'static', scrollable: true});
+    const modalRef = this.modalService.open(OrderRequestModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
   }
 
   showRequestDeatils(id) {
-    const modalRef = this.modalService.open(OrderRequestDetailModalComponent, {size: 'xl', backdrop: 'static', scrollable: true});
-    modalRef.componentInstance.request_id = id;
+    let request = this.all_requests.find(request => request.ParcelOrderItemId === id);
+    if (request.state != "allocated") {
+      const modalRef = this.modalService.open(OrderRequestDetailModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+      modalRef.componentInstance.request_id = id;
+    } else {
+      this.showParcelDeatils(id);
+    }
   }
 
   showRequestProcess(id) {
-    const modalRef = this.modalService.open(OrderRequestProcessComponent, {size: 'xl', backdrop: 'static', scrollable: true});
+    const modalRef = this.modalService.open(OrderRequestProcessComponent, { size: 'xl', backdrop: 'static', scrollable: true });
     modalRef.componentInstance.request_id = id;
   }
 
   showRequestAllocate(id, name) {
-    const modalRef = this.modalService.open(OrderRequestAllocateComponent, {size: 'xl', backdrop: 'static', scrollable: true});
+    const modalRef = this.modalService.open(OrderRequestAllocateComponent, { size: 'xl', backdrop: 'static', scrollable: true });
     modalRef.componentInstance.request_id = id;
     modalRef.componentInstance.request_name = name;
+  }
+
+  showParcelDeatils(id) {
+    const modalRef = this.modalService.open(ParcelTrackingDetailComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+    modalRef.componentInstance.parcel_id = id;
+  }
+
+  searchRequests(search) {
+    this.orderRequestService.getAllRequestsSearch(search).subscribe(data => {
+      this.all_requests = data['results'];
+    });
   }
 }

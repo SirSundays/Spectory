@@ -128,21 +128,24 @@ exports.getOneSpecific = async function (req, res) {
 exports.newRequestAllocate = async function (req, res) {
     try {
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        userController.emailToId(email, async function (id) {
-            const request = new ParcelTracking({
-                orderRequest: req.body.orderRequest,
-                purchaser: req.body.purchaser,
-                created: Date.now(),
-                state: 'allocated',
-                allocater: id,
-            });
-            let updateRequest = await Order_Request.findByIdAndUpdate(req.body.orderRequest, {
-                state: 'allocated',
-            }, {
-                new: true
-            });
-            let data = await request.save();
-            res.status(201).json({ data });
+        await userController.emailToId(email, async function (id) {
+            spectoryDb.execute('INSERT INTO parceltracking(purchaserId, allocaterId, receiverId, ParcelOrderItemId) VALUES (?,?,?,?)',
+                [req.body.purchaser, id, req.body.requester, req.body.parcelOrderItemId],
+                (err, results) => {
+                    if (err) {
+                        res.status(400).json({ err });
+                    } else {
+                        spectoryDb.execute('UPDATE parcelorderitem SET state="allocated" WHERE ParcelOrderItemId=?',
+                            [req.body.parcelOrderItemId],
+                            (err, results) => {
+                                if (err) {
+                                    res.status(400).json({ err });
+                                } else {
+                                    res.status(201).json('success');
+                                }
+                            });
+                    }
+                });
         });
     }
     catch (err) {

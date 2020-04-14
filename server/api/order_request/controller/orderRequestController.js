@@ -48,6 +48,58 @@ exports.getOneSpecific = async function (req, res) {
     }
 }
 
+exports.getSearch = async function (req, res) {
+    try {
+        let name = req.query.name;
+        let mine = req.query.mine;
+        let sort = req.query.sort;
+
+        if (mine === 'true') {
+            let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+            userController.emailToId(email, async function (id) {
+                spectoryDb.execute(`
+                SELECT poi.*, orq.*, 
+                requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+                FROM parcelorderitem poi, orderrequest orq 
+                JOIN user_entity AS requester
+                    ON requester.ID = orq.requesterId
+                WHERE poi.ParcelOrderItemId = orq.ParcelOrderItemId AND
+                (requester.ID = ?) AND
+                poi.name LIKE "%${name}%"
+                ORDER BY poi.${sort}
+                `, [id], (err, results) => {
+                    if (err) {
+                        res.status(400).json({ err });
+                    } else {
+                        res.status(201).json({ results });
+                    }
+                });
+            });
+        } else {
+            spectoryDb.execute(`
+            SELECT poi.*, orq.*, 
+            requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+            FROM parcelorderitem poi, orderrequest orq 
+            JOIN user_entity AS requester
+                ON requester.ID = orq.requesterId
+            WHERE poi.ParcelOrderItemId = orq.ParcelOrderItemId AND
+            poi.name LIKE "%${name}%"
+            ORDER BY poi.${sort}
+                `, [], (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json({ results });
+                }
+            });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).json({ err });
+    }
+}
+
 exports.searchImportRequest = async function (req, res) {
     try {
         let name = req.query.name;
@@ -131,19 +183,25 @@ exports.newRequest = async function (req, res) {
 
 exports.updateRequest = async function (req, res) {
     try {
-        //ÄNDERN AUF SQL SOWIE NEWREQUESTALLOCATE
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
         await userController.emailToId(email, async function (id) {
-            let update = await Order_Request.findByIdAndUpdate(req.body.id, {
-                state: req.body.state,
-                message: req.body.message,
-                admin_user: id,
-                processed: Date.now()
-            }, {
-                new: true
-            });
-            console.log(update);
-            res.status(201).json({ update });
+            spectoryDb.execute('UPDATE orderrequest SET message=?,processed=?, adminUserId=? WHERE ParcelOrderItemId=?',
+                [req.body.message, Date.now(), id, req.body.parcelOrderItemId],
+                (err, results) => {
+                    if (err) {
+                        res.status(400).json({ err });
+                    } else {
+                        spectoryDb.execute('UPDATE parcelorderitem SET state=? WHERE ParcelOrderItemId=?',
+                            [req.body.state, req.body.parcelOrderItemId],
+                            (err, results) => {
+                                if (err) {
+                                    res.status(400).json({ err });
+                                } else {
+                                    res.status(201).json('success');
+                                }
+                            });
+                    }
+                });
         });
     }
     catch (err) {

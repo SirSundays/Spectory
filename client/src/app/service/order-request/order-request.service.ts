@@ -20,6 +20,14 @@ export class OrderRequestService {
     return this.http.get(this.node_url + '/api/order_request/OneSpecific', { params: param });
   }
 
+  getAllRequestsSearch(search) {
+    let param = new HttpParams()
+    .set('name', search.name)
+    .set('mine', search.mine)
+    .set('sort', search.sort);
+    return this.http.get(this.node_url + '/api/order_request/all/search', { params: param });
+  }
+
   searchImportRequest(searchParam) {
     let param = new HttpParams()
     .set('name', searchParam.name)

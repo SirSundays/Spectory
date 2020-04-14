@@ -1,10 +1,28 @@
 <div class="card">
-    <form>
+    <form [formGroup]="searchForm" (ngSubmit)="searchRequests(searchForm.value)">
         <div class="form-row">
             <div class="col">
-                <input type="text" class="form-control" placeholder="Search for user">
+                <input id="name" type="text" class="form-control" formControlName="name"
+                    placeholder="Search for request">
             </div>
             <div class="col">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" formControlName="mine" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Only mine
+                    </label>
+                </div>
+            </div>
+            <div class="col">
+                <select class="form-control" id="sort" formControlName="sort">
+                    <option value="created ASC">Created Ascending</option>
+                    <option value="created DESC">Created Descending</option>
+                    <option value="name ASC">Name Ascending</option>
+                    <option value="name DESC">Name Descending</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="col" *ngIf="roles.includes('admin')">
                 <a (click)="addRequest()">
                     <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
                 </a>
@@ -25,6 +43,7 @@
         </tr>
     </thead>
     <tbody>
+        <p *ngIf="all_requests.length === 0" style="text-align: center;">Nothing found</p>
         <tr *ngFor="let request of all_requests; index as i" class="request-row">
             <th scope="row" (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ i + 1 }}</th>
             <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.name }}</td>

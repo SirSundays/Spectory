@@ -4,6 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ParcelTrackingService } from 'src/app/service/parcelTracking/parcel-tracking.service';
+import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
 
 @Component({
   selector: 'app-order-request-allocate',
@@ -20,15 +21,32 @@ export class OrderRequestAllocateComponent implements OnInit {
   request_id;
   request_name;
 
+  parcelOrderItemId;
+  requester;
+
   allocateForm;
 
-  constructor(private parcelTrackingService: ParcelTrackingService, private userService: UserService, private formBuilder: FormBuilder, public activeModal: NgbActiveModal, public router: Router) { }
+  constructor(private orderRequestService: OrderRequestService, private parcelTrackingService: ParcelTrackingService, private userService: UserService, private formBuilder: FormBuilder, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
+    this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe(async data => {
+      this.parcelOrderItemId = data['results']['ParcelOrderItemId'];
+      this.requester = data['results']['requesterId'];
+      this.allocateForm = this.formBuilder.group({
+        orderRequest: this.request_id,
+        purchaser: '',
+        requester: this.requester,
+        parcelOrderItemId: this.parcelOrderItemId
+      });
+    });
+
     this.allocateForm = this.formBuilder.group({
       orderRequest: this.request_id,
-      purchaser: ''
+      purchaser: '',
+      requester: this.requester,
+      parcelOrderItemId: this.parcelOrderItemId
     });
+
     this.userService.getAllPurchaserUser().subscribe(data => {
       this.allPurchaserUser = data['sendUser'];
     });

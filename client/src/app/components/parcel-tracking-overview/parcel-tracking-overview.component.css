@@ -1,3 +1,11 @@
 .form-row .col {
     text-align: center;
 }
+
+.card {
+    margin-bottom: 1%;
+}
+
+.request-row:hover {
+    background-color: gray;
+}
