@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class OrderRequestService {
 
   constructor(private http: HttpClient) { }
 
-  node_url = 'http://localhost:4000';
+  node_url = environment.nodejs_ip;
 
   getAllRequests() {
     return this.http.get(this.node_url + '/api/order_request/all');
@@ -24,7 +25,11 @@ export class OrderRequestService {
     let param = new HttpParams()
     .set('name', search.name)
     .set('mine', search.mine)
-    .set('sort', search.sort);
+    .set('sort', search.sort)
+    .set('state', search.state)
+    .set('priceMin', search.priceMin)
+    .set('priceMax', search.priceMax)
+    .set('source', search.source);
     return this.http.get(this.node_url + '/api/order_request/all/search', { params: param });
   }
 

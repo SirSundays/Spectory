@@ -21,11 +21,37 @@
                     <option value="name DESC">Name Descending</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
             <div class="col" *ngIf="roles.includes('admin')">
                 <a (click)="addParcel()">
                     <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
                 </a>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <select class="custom-select form-control" formControlName="state">
+                    <option value="all">all states</option>
+                    <option value="accept">accepted</option>
+                    <option value="decline">declined</option>
+                    <option value="requested">requested</option>
+                    <option value="allocated">allocated</option>
+                    <option value="archived">archived</option>
+                </select>
+            </div>
+            <div class="col">
+                <input id="priceMin" type="number" class="form-control" formControlName="priceMin"
+                    placeholder="Price min.">
+            </div>
+            <div class="col">
+                <input id="priceMax" type="number" class="form-control" formControlName="priceMax"
+                    placeholder="Price max.">
+            </div>
+            <div class="col">
+                <input id="source" type="text" class="form-control" formControlName="source"
+                    placeholder="Search for source">
             </div>
         </div>
     </form>

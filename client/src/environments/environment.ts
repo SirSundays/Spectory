@@ -11,9 +11,12 @@ let keycloakConfig: KeycloakConfig = {
   clientId: 'Spectory-Server'
 };
 
+let nodejs_ip  = 'http://localhost:4000'
+
 export const environment = {
   production: false,
   keycloakConfig,
+  nodejs_ip
 };
 
 /*

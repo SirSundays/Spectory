@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class ParcelTrackingService {
 
   constructor(private http: HttpClient) { }
 
-  node_url = 'http://localhost:4000';
+  node_url = environment.nodejs_ip;
 
   getAllParcels() {
     return this.http.get(this.node_url + '/api/parcelTracking/all');
@@ -18,7 +19,11 @@ export class ParcelTrackingService {
     let param = new HttpParams()
     .set('name', search.name)
     .set('mine', search.mine)
-    .set('sort', search.sort);
+    .set('sort', search.sort)
+    .set('state', search.state)
+    .set('priceMin', search.priceMin)
+    .set('priceMax', search.priceMax)
+    .set('source', search.source);
     return this.http.get(this.node_url + '/api/parcelTracking/all/search', { params: param });
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class UserService {
 
   constructor(private http: HttpClient, private keycloakAngular: KeycloakService) { }
 
-  node_url = 'http://localhost:4000';
+  node_url = environment.nodejs_ip;
   roles = ['basic', 'admin', 'purchaser'];
 
   getUserRoles() {

@@ -33,7 +33,11 @@ export class ParcelTrackingOverviewComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       name: '',
       mine: false,
-      sort: 'created DESC'
+      sort: 'created DESC',
+      state: 'all',
+      priceMin: '',
+      priceMax: '',
+      source: ''
     });
     this.parcelTrackingService.getAllParcels().subscribe(data => {
       this.all_parcels = data['results'];

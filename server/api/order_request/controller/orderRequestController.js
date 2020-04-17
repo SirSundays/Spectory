@@ -1,4 +1,5 @@
 const userController = require('../../user/controller/userController');
+const mailController = require('../../email/emailController/emailController');
 
 exports.getAll = async function (req, res) {
     try {
@@ -50,49 +51,53 @@ exports.getOneSpecific = async function (req, res) {
 
 exports.getSearch = async function (req, res) {
     try {
+        let query = `SELECT poi.*, orq.*, 
+        requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+        FROM parcelorderitem poi, orderrequest orq 
+        JOIN user_entity AS requester
+            ON requester.ID = orq.requesterId
+        WHERE poi.ParcelOrderItemId = orq.ParcelOrderItemId
+        `
+
         let name = req.query.name;
         let mine = req.query.mine;
         let sort = req.query.sort;
+        let state = req.query.state;
+        let priceMin = req.query.priceMin;
+        let priceMax = req.query.priceMax;
+        let source = req.query.source;
 
         if (mine === 'true') {
-            let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-            userController.emailToId(email, async function (id) {
-                spectoryDb.execute(`
-                SELECT poi.*, orq.*, 
-                requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
-                FROM parcelorderitem poi, orderrequest orq 
-                JOIN user_entity AS requester
-                    ON requester.ID = orq.requesterId
-                WHERE poi.ParcelOrderItemId = orq.ParcelOrderItemId AND
-                (requester.ID = ?) AND
-                poi.name LIKE "%${name}%"
-                ORDER BY poi.${sort}
-                `, [id], (err, results) => {
-                    if (err) {
-                        res.status(400).json({ err });
-                    } else {
-                        res.status(201).json({ results });
-                    }
-                });
-            });
-        } else {
-            spectoryDb.execute(`
-            SELECT poi.*, orq.*, 
-            requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
-            FROM parcelorderitem poi, orderrequest orq 
-            JOIN user_entity AS requester
-                ON requester.ID = orq.requesterId
-            WHERE poi.ParcelOrderItemId = orq.ParcelOrderItemId AND
-            poi.name LIKE "%${name}%"
-            ORDER BY poi.${sort}
-                `, [], (err, results) => {
+            query += ' AND (requester.ID = ?)';
+        }
+
+        if (state != 'all') {
+            query += ` AND poi.state = '${state}'`;
+        }
+
+        if (priceMin != '' && priceMin != 'null') {
+            query += ` AND poi.price > ${priceMin}`;
+        }
+
+        if (priceMax != '' && priceMax != 'null') {
+            query += ` AND poi.price < ${priceMax}`;
+        }
+
+        query += ` AND poi.link LIKE "%${source}%"`;
+        query += ` AND poi.name LIKE "%${name}%"`;
+        query += ` ORDER BY poi.${sort}`;
+
+        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+        userController.emailToId(email, async function (id) {
+            spectoryDb.execute(query
+                , [id], (err, results) => {
                 if (err) {
                     res.status(400).json({ err });
                 } else {
                     res.status(201).json({ results });
                 }
             });
-        }
+        });
     }
     catch (err) {
         console.log(err);
@@ -197,6 +202,7 @@ exports.updateRequest = async function (req, res) {
                                 if (err) {
                                     res.status(400).json({ err });
                                 } else {
+                                    mailController.orderRequestProcessMail(req.body.parcelOrderItemId);
                                     res.status(201).json('success');
                                 }
                             });

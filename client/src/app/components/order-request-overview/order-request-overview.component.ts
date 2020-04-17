@@ -33,7 +33,11 @@ export class OrderRequestOverviewComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       name: '',
       mine: false,
-      sort: 'created DESC'
+      sort: 'created DESC',
+      state: 'all',
+      priceMin: '',
+      priceMax: '',
+      source: ''
     });
 
     this.orderRequestService.getAllRequests().subscribe(data => {
