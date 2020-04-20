@@ -42,15 +42,15 @@ export class OrderRequestOverviewComponent implements OnInit {
 
     this.orderRequestService.getAllRequests().subscribe(data => {
       this.all_requests = data['results'];
+      this.route.params.subscribe(params => {
+        this.id = params['id'];
+        if (this.id != undefined) {
+          this.showRequestDeatils(this.id);
+        }
+      });
     });
     this.roles = this.userService.getUserRoles();
 
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-      if (this.id != undefined) {
-        this.showRequestDeatils(this.id);
-      }
-    });
   }
 
   addRequest() {
@@ -58,8 +58,8 @@ export class OrderRequestOverviewComponent implements OnInit {
   }
 
   showRequestDeatils(id) {
-    let request = this.all_requests.find(request => request.ParcelOrderItemId === id);
-    if (request.state != "allocated") {
+    let request = this.all_requests.find(request => request.ParcelOrderItemId == id);
+    if (request.state != "allocated" && request.state != "ordered" && request.state != "archived") {
       const modalRef = this.modalService.open(OrderRequestDetailModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
       modalRef.componentInstance.request_id = id;
     } else {

@@ -41,17 +41,16 @@ export class ParcelTrackingOverviewComponent implements OnInit {
     });
     this.parcelTrackingService.getAllParcels().subscribe(data => {
       this.all_parcels = data['results'];
+      this.route.params.subscribe(params => {
+        this.id = params['id'];
+        if (this.id != undefined) {
+          this.showParcelDeatils(this.id);
+        }
+      });
     });
     this.roles = this.userService.getUserRoles();
     this.myMail = await this.userService.getOwnEmail();
     this.myMail = this.myMail.email;
-
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-      if (this.id != undefined) {
-        this.showParcelDeatils(this.id);
-      }
-    });
   }
 
   addParcel() {

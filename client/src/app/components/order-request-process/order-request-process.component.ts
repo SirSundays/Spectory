@@ -46,7 +46,7 @@ export class OrderRequestProcessComponent implements OnInit {
         state: '',
         parcelOrderItemId: this.parcelOrderItemId
       });
-      this.request.created = new Date(this.request.created).toLocaleString();
+      this.request.created = new Date(parseInt(this.request.created)).toLocaleString();
     });
 
     this.processForm = this.formBuilder.group({
