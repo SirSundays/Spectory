@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./order-request-detail-modal.component.css']
 })
 export class OrderRequestDetailModalComponent implements OnInit {
-  requestForm;
   err = false;
   errMessage = [];
 
@@ -24,20 +23,18 @@ export class OrderRequestDetailModalComponent implements OnInit {
     link: '',
     info: '',
     user: '',
+    requesterFirstName: '',
+    requesterLastName: '',
+    requesterEmail: '',
     created: ''
   };
-
-  fullname = '';
 
   constructor(private orderRequestService: OrderRequestService, private userService: UserService, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
-    this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe( async data => {
-      this.request = data['one'];
-      this.request.created = new Date(this.request.created).toLocaleString();
-      this.userService.getFullName(this.request.user).subscribe(async data => {
-        this.fullname = data['firstname'] + ' ' + data['lastname'];
-      });
+    this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe(async data => {
+      this.request = data['results'];
+      this.request.created = new Date(parseInt(this.request.created)).toLocaleString();
     });
   }
 }

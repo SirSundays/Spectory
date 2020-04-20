@@ -1,0 +1,12 @@
+<img src="cid:spectoryLogo" style="width: 150px; height: auto;"/>
+<h3>Hello {{request.requesterFirstName}},</h3>
+<p>Your Orderrequest (<a href="http://localhost:4200/order-request/overview/{{request.ParcelOrderItemId}}">{{request.name}}</a>) got answered:</p>
+<h4>{{request.state}}</h4>
+<h4>Message:</h4>
+{{#if request.message}}
+<p>{{request.message}}</p>
+{{else}}
+<p>No message.</p>
+{{/if}}
+<p></p>
+<p>Automated Message by Spectory.</p>

@@ -1,9 +1,24 @@
-const OrderRequest = require('../model/OrderRequest');
+const userController = require('../../user/controller/userController');
+const mailController = require('../../email/emailController/emailController');
 
 exports.getAll = async function (req, res) {
     try {
-        const all = await OrderRequest.getAll();
-        res.status(201).json({ all });
+        spectoryDb.execute(`
+        SELECT poi.*, ore.*, 
+        requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+        FROM parcelorderitem poi, orderrequest ore 
+        JOIN user_entity AS requester
+            ON requester.ID = ore.requesterId
+        WHERE poi.ParcelOrderItemId = ore.ParcelOrderItemId
+        ORDER BY poi.created DESC
+        `, [], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                res.status(201).json({ results });
+            }
+        }
+        );
     }
     catch (err) {
         res.status(400).json({ err })
@@ -12,50 +27,161 @@ exports.getAll = async function (req, res) {
 
 exports.getOneSpecific = async function (req, res) {
     try {
-        const one = await OrderRequest.getOneSpecific(req.query.req_id);
-        res.status(201).json({ one });
+        spectoryDb.execute(`
+        SELECT poi.*, ore.*, 
+        requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+        FROM parcelorderitem poi, orderrequest ore 
+        JOIN user_entity AS requester
+            ON requester.ID = ore.requesterId
+        WHERE poi.ParcelOrderItemId = ore.ParcelOrderItemId AND poi.ParcelOrderItemId = ?
+        `, [req.query.req_id], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                results = results[0];
+                res.status(201).json({ results });
+            }
+        }
+        );
     }
     catch (err) {
         res.status(400).json({ err })
     }
 }
 
+exports.getSearch = async function (req, res) {
+    try {
+        let query = `SELECT poi.*, orq.*, 
+        requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+        FROM parcelorderitem poi, orderrequest orq 
+        JOIN user_entity AS requester
+            ON requester.ID = orq.requesterId
+        WHERE poi.ParcelOrderItemId = orq.ParcelOrderItemId
+        `
+
+        let name = req.query.name;
+        let mine = req.query.mine;
+        let sort = req.query.sort;
+        let state = req.query.state;
+        let priceMin = req.query.priceMin;
+        let priceMax = req.query.priceMax;
+        let source = req.query.source;
+
+        if (mine === 'true') {
+            query += ' AND (requester.ID = ?)';
+        }
+
+        if (state != 'all') {
+            query += ` AND poi.state = '${state}'`;
+        }
+
+        if (priceMin != '' && priceMin != 'null') {
+            query += ` AND poi.price > ${priceMin}`;
+        }
+
+        if (priceMax != '' && priceMax != 'null') {
+            query += ` AND poi.price < ${priceMax}`;
+        }
+
+        query += ` AND poi.link LIKE "%${source}%"`;
+        query += ` AND poi.name LIKE "%${name}%"`;
+        query += ` ORDER BY poi.${sort}`;
+
+        let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
+        userController.emailToId(email, async function (id) {
+            spectoryDb.execute(query
+                , [id], (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json({ results });
+                }
+            });
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).json({ err });
+    }
+}
+
 exports.searchImportRequest = async function (req, res) {
     try {
+        let name = req.query.name;
+        let state = req.query.state;
+
         if (req.query.state === 'all') {
-            const results = await OrderRequest.find({ name: { $regex: req.query.name, $options: 'i' } })
-                .limit(20);
-            res.status(201).json({ results });
+            spectoryDb.execute(`
+            SELECT poi.*, ore.*, 
+            requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+            FROM parcelorderitem poi, orderrequest ore 
+            JOIN user_entity AS requester
+            ON requester.ID = ore.requesterId
+            WHERE poi.ParcelOrderItemId = ore.ParcelOrderItemId AND
+            poi.name LIKE "%${name}%"
+            ORDER BY poi.created DESC
+            LIMIT 20
+            `, [], (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json({ results });
+                }
+            }
+            );
         } else {
-            const results = await OrderRequest.find({ name: { $regex: req.query.name, $options: 'i' }, state: req.query.state })
-                .limit(20);
-            res.status(201).json({ results });
+            spectoryDb.execute(`
+            SELECT poi.*, ore.*, 
+            requester.FIRST_NAME AS requesterFirstName, requester.LAST_NAME AS requesterLastName, requester.EMAIL  AS requesterEmail
+            FROM parcelorderitem poi, orderrequest ore 
+            JOIN user_entity AS requester
+            ON requester.ID = ore.requesterId
+            WHERE poi.ParcelOrderItemId = ore.ParcelOrderItemId AND
+            poi.name LIKE "%${name}%" AND
+            poi.state = '${state}'
+            ORDER BY poi.created DESC
+            LIMIT 20
+            `, [], (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json({ results });
+                }
+            }
+            );
         }
     }
     catch (err) {
-        res.status(400).json({ err });
+        res.status(400).json({ err })
     }
 }
 
 exports.newRequest = async function (req, res) {
     try {
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        const request = new OrderRequest({
-            name: req.body.name,
-            quantity: req.body.quantity,
-            price: req.body.price,
-            shipping: req.body.shipping,
-            reason: req.body.reason,
-            link: req.body.link,
-            info: req.body.info,
-            created: Date.now(),
-            user: email,
-            state: 'requested'
-        });
-        let data = await request.save();
-        res.status(201).json({ data });
+        spectoryDb.execute('INSERT INTO parcelorderitem(`name`, `quantity`, `price`, `shipping`, `link`, `state`, `created`) VALUES (?,?,?,?,?,?,?)',
+            [req.body.name, req.body.quantity, req.body.price, req.body.shipping, req.body.link, 'requested', Date.now()],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    let newParcelOrderItemId = results.insertId;
+                    userController.emailToId(email, async function (id) {
+                        spectoryDb.execute('INSERT INTO `orderrequest`(`reason`, `info`, `requesterId`, `ParcelOrderItemId`) VALUES (?,?,?,?)',
+                            [req.body.reason, req.body.info, id, newParcelOrderItemId],
+                            (err, results) => {
+                                if (err) {
+                                    res.status(400).json({ err });
+                                } else {
+                                    res.status(201).json('success');
+                                }
+                            });
+                    });
+                }
+            });
     }
     catch (err) {
+        console.log(err);
         res.status(400).json({ err });
     }
 }
@@ -63,15 +189,26 @@ exports.newRequest = async function (req, res) {
 exports.updateRequest = async function (req, res) {
     try {
         let email = jwt.decode(req.headers.authorization.split(' ')[1]).email;
-        let update = await OrderRequest.findByIdAndUpdate(req.body.id, {
-            state: req.body.state,
-            message: req.body.message,
-            adminUser: email,
-            processed: Date.now()
-        }, {
-            new: true
+        await userController.emailToId(email, async function (id) {
+            spectoryDb.execute('UPDATE orderrequest SET message=?,processed=?, adminUserId=? WHERE ParcelOrderItemId=?',
+                [req.body.message, Date.now(), id, req.body.parcelOrderItemId],
+                (err, results) => {
+                    if (err) {
+                        res.status(400).json({ err });
+                    } else {
+                        spectoryDb.execute('UPDATE parcelorderitem SET state=? WHERE ParcelOrderItemId=?',
+                            [req.body.state, req.body.parcelOrderItemId],
+                            (err, results) => {
+                                if (err) {
+                                    res.status(400).json({ err });
+                                } else {
+                                    mailController.orderRequestProcessMail(req.body.parcelOrderItemId);
+                                    res.status(201).json('success');
+                                }
+                            });
+                    }
+                });
         });
-        res.status(201).json({ update });
     }
     catch (err) {
         res.status(400).json({ err });

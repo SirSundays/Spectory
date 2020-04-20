@@ -1,0 +1,100 @@
+<div class="modal-header">
+    <h4 class="modal-title">New Parcel-Track</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let err of errMessage">
+            <strong>Warning!</strong> {{ err }}
+        </p>
+    </ngb-alert>
+</p>
+<form [formGroup]="parcelForm" (ngSubmit)="submitParcel(parcelForm.value)">
+    <div class="modal-body" style='height: 500px;'>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="name">Name*</label>
+            </div>
+            <input id="name" type="text" class="form-control" formControlName="name" placeholder="Name *" required
+                minlength="1">
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="right" ngbTooltip="What you want to order">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="quantity">Quantity*</label>
+            </div>
+            <input id="quantity" type="number" class="form-control" formControlName="quantity" placeholder="Quantity *"
+                min="1" required>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How many you want to order">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="price">Price*</label>
+            </div>
+            <input id="price" type="number" class="form-control" formControlName="price" placeholder="Price in € *"
+                min="0.01" required step="0.01">
+            <div class="input-group-prepend">
+                <div class="input-group-text">€ ({{ parcelForm.value.price / parcelForm.value.quantity }}€ apiece)</div>
+            </div>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How much does the complete order cost excl. shipping">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="shipping">Shipping*</label>
+            </div>
+            <input id="shipping" type="number" class="form-control" formControlName="shipping"
+                placeholder="Shipping in € *" min="0.01" required step="0.01">
+            <div class="input-group-prepend">
+                <div class="input-group-text">€</div>
+            </div>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How much does the shipping for the complete order cost">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="link">Link*</label>
+            </div>
+            <input id="link" type="text" class="form-control" formControlName="link" placeholder="Link *" min="1"
+                required>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="Where to buy this item (Doesn´t have to be a URL)">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="link">Purchaser*</label>
+            </div>
+            <div class="col">
+                <ng-select [items]="allPurchaserUser" bindLabel="fullName" bindValue="id" formControlName="purchaser"
+                    required></ng-select>
+                <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                    ngbTooltip="Who has to purchase this order">
+                </fa-icon>
+            </div>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="link">Receiver*</label>
+            </div>
+            <div class="col">
+                <ng-select [items]="allBasicUser" bindLabel="fullName" bindValue="id" formControlName="receiver"
+                    required></ng-select>
+                <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                    ngbTooltip="To whom goes this order">
+                </fa-icon>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="importRequest()" id="import-btn">Import</button>
+        <button class="button" type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>

@@ -16,6 +16,7 @@ export class OrderRequestProcessComponent implements OnInit {
   errMessage = [];
 
   request_id;
+  parcelOrderItemId;
   request = {
     name: '',
     quantity: '',
@@ -25,10 +26,11 @@ export class OrderRequestProcessComponent implements OnInit {
     link: '',
     info: '',
     user: '',
+    requesterFirstName: '',
+    requesterLastName: '',
+    requesterEmail: '',
     created: ''
   };
-
-  fullname = '';
 
   processForm;
 
@@ -36,18 +38,23 @@ export class OrderRequestProcessComponent implements OnInit {
 
   ngOnInit(): void {
     this.orderRequestService.getOneSpecificRequest(this.request_id).subscribe(async data => {
-      this.request = data['one'];
-      this.request.created = new Date(this.request.created).toLocaleString();
-      this.userService.getFullName(this.request.user).subscribe(async data => {
-        this.fullname = data['firstname'] + ' ' + data['lastname'];
+      this.request = data['results'];
+      this.parcelOrderItemId = data['results']["ParcelOrderItemId"];
+      this.processForm = this.formBuilder.group({
+        id: this.request_id,
+        message: '',
+        state: '',
+        parcelOrderItemId: this.parcelOrderItemId
       });
+      this.request.created = new Date(parseInt(this.request.created)).toLocaleString();
     });
 
     this.processForm = this.formBuilder.group({
       id: this.request_id,
       message: '',
-      state: ''
-    })
+      state: '',
+      parcelOrderItemId: this.parcelOrderItemId
+    });
   }
 
   submitProcess(request) {

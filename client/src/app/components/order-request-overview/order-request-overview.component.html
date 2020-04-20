@@ -1,13 +1,57 @@
 <div class="card">
-    <form>
-        <div class="form-row">
+    <form [formGroup]="searchForm" (ngSubmit)="searchRequests(searchForm.value)">
+        <div class="form-row align-items-center">
             <div class="col">
-                <input type="text" class="form-control" placeholder="Search for user">
+                <input id="name" type="text" class="form-control" formControlName="name"
+                    placeholder="Search for request">
             </div>
             <div class="col">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" formControlName="mine" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Only mine
+                    </label>
+                </div>
+            </div>
+            <div class="col">
+                <select class="form-control" id="sort" formControlName="sort">
+                    <option value="created ASC">Created Ascending</option>
+                    <option value="created DESC">Created Descending</option>
+                    <option value="name ASC">Name Ascending</option>
+                    <option value="name DESC">Name Descending</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col" *ngIf="roles.includes('admin')">
                 <a (click)="addRequest()">
                     <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
                 </a>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <select class="custom-select form-control" formControlName="state">
+                    <option value="all">all states</option>
+                    <option value="accept">accepted</option>
+                    <option value="decline">declined</option>
+                    <option value="requested">requested</option>
+                    <option value="allocated">allocated</option>
+                    <option value="archived">archived</option>
+                </select>
+            </div>
+            <div class="col">
+                <input id="priceMin" type="number" class="form-control" formControlName="priceMin"
+                    placeholder="Price min.">
+            </div>
+            <div class="col">
+                <input id="priceMax" type="number" class="form-control" formControlName="priceMax"
+                    placeholder="Price max.">
+            </div>
+            <div class="col">
+                <input id="source" type="text" class="form-control" formControlName="source"
+                    placeholder="Search for source">
             </div>
         </div>
     </form>
@@ -25,20 +69,29 @@
         </tr>
     </thead>
     <tbody>
+        <p *ngIf="all_requests.length === 0" style="text-align: center;">Nothing found</p>
         <tr *ngFor="let request of all_requests; index as i" class="request-row">
-            <th scope="row" (click)="showRequestDeatils(request._id)">{{ i + 1 }}</th>
-            <td (click)="showRequestDeatils(request._id)">{{ request.name }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.quantity | number }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.price | number }}</td>
-            <td (click)="showRequestDeatils(request._id)">{{ request.user }}</td>
-            <td (click)="showRequestDeatils(request._id)">
+            <th scope="row" (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ i + 1 }}</th>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.name }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.quantity | number }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.price | number }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">{{ request.requesterFirstName }}
+                {{request.requesterLastName }}</td>
+            <td (click)="showRequestDeatils(request.ParcelOrderItemId)">
                 <span class="badge badge-primary" *ngIf="request.state == 'requested'">requested</span>
                 <span class="badge badge-success" *ngIf="request.state == 'accept'">accepted</span>
+                <span class="badge badge-info" *ngIf="request.state == 'allocated'">allocated</span>
                 <span class="badge badge-light" *ngIf="request.state == 'ordered'">ordered</span>
                 <span class="badge badge-danger" *ngIf="request.state == 'decline'">declined</span>
                 <span class="badge badge-secondary" *ngIf="request.state == 'archived'">archived</span>
             </td>
-            <td><button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'requested'" (click)="showRequestProcess(request._id)">Process</button></td>
+            <td>
+                <button type="button" class="btn btn-dark"
+                    *ngIf="roles.includes('admin') && request.state == 'requested'"
+                    (click)="showRequestProcess(request.ParcelOrderItemId)">Process</button>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'accept'"
+                    (click)="showRequestAllocate(request.ParcelOrderItemId, request.name)">Allocate</button>
+            </td>
         </tr>
     </tbody>
 </table>

@@ -5,3 +5,7 @@
 .request-row:hover {
     background-color: gray;
 }
+
+.form-row .col {
+    text-align: center;
+}

@@ -27,6 +27,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.12.1",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@ng-bootstrap/ng-bootstrap": "^6.0.2",
+    "@ng-select/ng-select": "^4.0.0",
     "bootstrap": "^4.4.1",
     "keycloak-angular": "^7.2.0",
     "keycloak-js": "^9.0.2",

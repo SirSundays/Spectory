@@ -3,8 +3,7 @@ const PORT = process.env.PORT || 4000;
 const morgan = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const config = require("./config/db");
+const mysql = require('mysql2');
 const app = express();
 
 jwt = require('jsonwebtoken');
@@ -22,15 +21,13 @@ keycloak = new Keycloak({}, keycloakConfig);
 app.use(keycloak.middleware());
 
 //configure database and mongoose
-mongoose.set("useCreateIndex", true);
-mongoose
-  .connect(config.database, { useNewUrlParser: true })
-  .then(() => {
-    // console.log("Database is connected");
-  })
-  .catch(err => {
-    // console.log({ database_error: err });
-  });
+spectoryDb = mysql.createPool({
+  host: 'localhost',
+  user: 'spectory',
+  password: '',
+  database: 'spectory',
+  connectionLimit: 50
+});
 // db configuaration ends here
 
 //registering cors
@@ -43,11 +40,14 @@ app.use(bodyParser.json());
 
 app.use(morgan("dev")); // configire morgan
 
-const orderRequestRoutes = require("./api/order_request/route/orderRequest"); //bring in our user routes
+const orderRequestRoutes = require("./api/order_request/route/order_request");
 app.use("/api/order_request", orderRequestRoutes);
 
 const userRoutes = require("./api/user/route/user");
 app.use("/api/user", userRoutes);
+
+const parcelTrackingRoutes = require("./api/parcelTracking/route/parcelTracking");
+app.use("/api/parcelTracking", parcelTrackingRoutes);
 
 app.listen(PORT, () => {
   // console.log(`App is running on ${PORT}`);

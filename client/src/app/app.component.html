@@ -2,9 +2,16 @@
 
     <!-- Sidebar -->
     <div class="border-right" id="sidebar-wrapper">
-        <div class="sidebar-heading"><img src='../assets/spectory.png'></div>
+        <div class="sidebar-heading"><a routerLink="/dashboard"><img src='../assets/spectory.png'></a></div>
         <div class="list-group list-group-flush">
-            
+            <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+                <div class="container">
+                    <ul class="nav navbar-nav" routerLinkActive="active">
+                        <li class="nav-item"><a class="nav-link" routerLink="/order-request/overview">Order-Request</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/parcel-tracking/overview">Parcel-Tracking</a></li>
+                    </ul>
+                </div>
+            </nav>
         </div>
         <div class="sidebar-footer">
             <a (click)="doLogout()" id="logout">

@@ -1,0 +1,111 @@
+<div class="card">
+    <form [formGroup]="searchForm" (ngSubmit)="searchParcels(searchForm.value)">
+        <div class="form-row">
+            <div class="col">
+                <input id="name" type="text" class="form-control" formControlName="name"
+                    placeholder="Search for parcel">
+            </div>
+            <div class="col">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" formControlName="mine" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Only mine
+                    </label>
+                </div>
+            </div>
+            <div class="col">
+                <select class="form-control" id="sort" formControlName="sort">
+                    <option value="created ASC">Created Ascending</option>
+                    <option value="created DESC">Created Descending</option>
+                    <option value="name ASC">Name Ascending</option>
+                    <option value="name DESC">Name Descending</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col" *ngIf="roles.includes('admin')">
+                <a (click)="addParcel()">
+                    <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+                </a>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <select class="custom-select form-control" formControlName="state">
+                    <option value="all">all states</option>
+                    <option value="accept">accepted</option>
+                    <option value="decline">declined</option>
+                    <option value="requested">requested</option>
+                    <option value="allocated">allocated</option>
+                    <option value="archived">archived</option>
+                </select>
+            </div>
+            <div class="col">
+                <input id="priceMin" type="number" class="form-control" formControlName="priceMin"
+                    placeholder="Price min.">
+            </div>
+            <div class="col">
+                <input id="priceMax" type="number" class="form-control" formControlName="priceMax"
+                    placeholder="Price max.">
+            </div>
+            <div class="col">
+                <input id="source" type="text" class="form-control" formControlName="source"
+                    placeholder="Search for source">
+            </div>
+        </div>
+    </form>
+</div>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let error of errMessage">
+            <strong>Warning!</strong> {{ error }}
+        </p>
+    </ngb-alert>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">What?</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Receiver</th>
+            <th scope="col">Purchaser</th>
+            <th scope="col">State</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <p *ngIf="all_parcels.length === 0" style="text-align: center;">Nothing found</p>
+        <tr *ngFor="let parcel of all_parcels; index as i" class="request-row">
+            <th scope="row" (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ i + 1 }}</th>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ parcel.name }}</td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ parcel.quantity | number }}</td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">{{ parcel.price | number }}</td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)"><a href="mailto:{{ parcel.receiverEmail }}">{{ parcel.receiverFirstName }} {{parcel.receiverLastName }}</a>
+            </td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)"><a href="mailto:{{ parcel.purchaserEmail }}">{{ parcel.purchaserFirstName }} {{parcel.purchaserLastName }}</a>
+            </td>
+            <td (click)="showParcelDeatils(parcel.ParcelOrderItemId)">
+                <span class="badge badge-primary" *ngIf="parcel.state == 'requested'">requested</span>
+                <span class="badge badge-success" *ngIf="parcel.state == 'accept'">accepted</span>
+                <span class="badge badge-info" *ngIf="parcel.state == 'allocated'">allocated</span>
+                <span class="badge badge-light" *ngIf="parcel.state == 'ordered'">ordered</span>
+                <span class="badge badge-danger" *ngIf="parcel.state == 'decline'">declined</span>
+                <span class="badge badge-secondary" *ngIf="parcel.state == 'archived'">archived</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-dark"
+                    *ngIf="roles.includes('purchaser') && parcel.state == 'allocated' && parcel.purchaserEmail == myMail"
+                    (click)="parcelOrdered(parcel.ParcelOrderItemId, parcel.name)">Ordered</button>
+                <button type="button" class="btn btn-dark"
+                    *ngIf="roles.includes('purchaser') && parcel.state == 'ordered' && parcel.purchaserEmail == myMail"
+                    (click)="showParcelMoreInfo(parcel.ParcelOrderItemId, parcel.name)">Add more info</button>
+                <button type="button" class="btn btn-dark"
+                    *ngIf="roles.includes('basic') && parcel.state == 'ordered' && parcel.receiverEmail == myMail"
+                    (click)="parcelDelivered(parcel.ParcelOrderItemId, parcel.name)">Received</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
