@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h4 class="modal-title">Order Request Templates</h4>
+    <div class="col">
+        <a (click)="addTemplate()">
+            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+        </a>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">What?</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Shipping</th>
+            <th scope="col">Link</th>
+            <th scope="col" *ngIf="roles.includes('admin')">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <p *ngIf="all_templates.length === 0" style="text-align: center;">Nothing found</p>
+        <tr *ngFor="let template of all_templates; index as i" class="request-row">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ template.name }}</td>
+            <td>{{ template.quantity | number }}</td>
+            <td>{{ template.price | number }}</td>
+            <td>{{ template.shipping }}</td>
+            <td>{{ template.link }}</td>
+            <td>
+                <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin')"
+                    (click)="editTemplate(template.orderrequeststudents_id)">Edit</button>
+                <button type="button" class="btn btn-danger" *ngIf="roles.includes('admin')"
+                    (click)="deleteTemplate(template.orderrequeststudents_id, template.name)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="modal-footer">
+
+</div>

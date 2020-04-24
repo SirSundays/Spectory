@@ -24,9 +24,21 @@
             <div class="col">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
-            <div class="col" *ngIf="roles.includes('admin')">
-                <a (click)="addRequest()">
+            <div class="col" *ngIf="roles.includes('student'); else nonStudentBlock">
+                <a (click)="addStudentRequest()">
                     <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+                </a>
+            </div>
+            <ng-template #nonStudentBlock>
+                <div class="col">
+                    <a (click)="addRequest()">
+                        <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+                    </a>
+                </div>
+            </ng-template>
+            <div class="col" *ngIf="roles.includes('admin')">
+                <a (click)="showStudentTemplates()">
+                    <fa-icon [icon]="['fas', 'edit']"></fa-icon>
                 </a>
             </div>
         </div>
@@ -91,6 +103,9 @@
                     (click)="showRequestProcess(request.ParcelOrderItemId)">Process</button>
                 <button type="button" class="btn btn-dark" *ngIf="roles.includes('admin') && request.state == 'accept'"
                     (click)="showRequestAllocate(request.ParcelOrderItemId, request.name)">Allocate</button>
+                <button type="button" class="btn btn-dark"
+                    *ngIf="roles.includes('admin') && (request.state != 'requested' || request.state == 'decline') && request.hasTemplate == 0"
+                    (click)="addAsTemplate(request.ParcelOrderItemId)">Add to templates</button>
             </td>
         </tr>
     </tbody>

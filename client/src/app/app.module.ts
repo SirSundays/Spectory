@@ -30,13 +30,16 @@ import { ParcelTrackingOverviewComponent } from './components/parcel-tracking-ov
 import { ParcelTrackingModalComponent } from './components/parcel-tracking-modal/parcel-tracking-modal.component';
 import { ParcelTrackingDetailComponent } from './components/parcel-tracking-detail/parcel-tracking-detail.component';
 import { ParcelTrackingMoreInfoComponent } from './components/parcel-tracking-more-info/parcel-tracking-more-info.component';
+import { OrderRequestStudentModalComponent } from './components/order-request-student-modal/order-request-student-modal.component';
+import { OrderRequestStudentOverviewComponent } from './components/order-request-student-overview/order-request-student-overview.component';
+import { OrderRequestStudentQuickCreateComponent } from './components/order-request-student-quick-create/order-request-student-quick-create.component';
 
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent, ParcelTrackingMoreInfoComponent,
+    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent, ParcelTrackingMoreInfoComponent, OrderRequestStudentModalComponent, OrderRequestStudentOverviewComponent, OrderRequestStudentQuickCreateComponent,
   ],
   imports: [
     BrowserModule,

@@ -91,12 +91,12 @@ exports.getSearch = async function (req, res) {
         userController.emailToId(email, async function (id) {
             spectoryDb.execute(query
                 , [id], (err, results) => {
-                if (err) {
-                    res.status(400).json({ err });
-                } else {
-                    res.status(201).json({ results });
-                }
-            });
+                    if (err) {
+                        res.status(400).json({ err });
+                    } else {
+                        res.status(201).json({ results });
+                    }
+                });
         });
     }
     catch (err) {
@@ -212,5 +212,144 @@ exports.updateRequest = async function (req, res) {
     }
     catch (err) {
         res.status(400).json({ err });
+    }
+}
+
+exports.newStudentRequestTemplate = async function (req, res) {
+    try {
+        spectoryDb.execute('SELECT * FROM parcelorderitem WHERE ParcelOrderItemId = ?',
+            [req.body.id],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    results = results[0];
+                    spectoryDb.execute('INSERT INTO orderrequeststudents(name, quantity, price, shipping, link) VALUES (?,?,?,?,?)',
+                        [results.name, results.quantity, results.price, results.shipping, results.link],
+                        (err, results) => {
+                            if (err) {
+                                res.status(400).json({ err });
+                            } else {
+                                spectoryDb.execute('UPDATE parcelorderitem SET hasTemplate=1 WHERE ParcelOrderItemId = ?',
+                                    [req.body.id],
+                                    (err, results) => {
+                                        if (err) {
+                                            res.status(400).json({ err });
+                                        } else {
+                                            res.status(201).json('success');
+                                        }
+                                    });
+                            }
+                        })
+                }
+            });
+    }
+    catch (err) {
+        res.status(400).json({ err });
+    }
+}
+
+exports.newStudentRequestTemplateScratch = async function (req, res) {
+    try {
+        let name = req.body.name;
+        let quantity = req.body.quantity;
+        let price = req.body.price;
+        let shipping = req.body.shipping;
+        let link = req.body.link;
+
+        spectoryDb.execute('INSERT INTO orderrequeststudents(name, quantity, price, shipping, link) VALUES (?,?,?,?,?)',
+            [name, quantity, price, shipping, link],
+            (err, results) => {
+                if (err) {
+                    res.status(400).json({ err });
+                } else {
+                    res.status(201).json('success');
+                }
+            })
+    }
+    catch (err) {
+        res.status(400).json({ err });
+    }
+}
+
+exports.getAllStudentRequestTemplates = async function (req, res) {
+    try {
+        spectoryDb.execute(`
+        SELECT * FROM orderrequeststudents
+        `, [], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                res.status(201).json({ results });
+            }
+        }
+        );
+    }
+    catch (err) {
+        res.status(400).json({ err })
+    }
+}
+
+exports.deleteStudentRequestTemplate = async function (req, res) {
+    try {
+        spectoryDb.execute(`
+        DELETE FROM orderrequeststudents WHERE orderrequeststudents_id = ?
+        `, [req.query.id], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                res.status(201).json('success');
+            }
+        }
+        );
+    }
+    catch (err) {
+        res.status(400).json({ err })
+    }
+}
+
+exports.getOneSpecificTemplate = async function (req, res) {
+    try {
+        spectoryDb.execute(`
+        SELECT * FROM orderrequeststudents WHERE orderrequeststudents_id = ?
+        `, [req.query.template_id], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                results = results[0];
+                res.status(201).json({ results });
+            }
+        }
+        );
+    }
+    catch (err) {
+        res.status(400).json({ err })
+    }
+}
+
+exports.updateTemplate = async function (req, res) {
+    try {
+        let name = req.body.name;
+        let quantity = req.body.quantity;
+        let price = req.body.price;
+        let shipping = req.body.shipping;
+        let link = req.body.link;
+
+        let id = req.body.orderrequeststudents_id;
+
+        spectoryDb.execute(`
+        UPDATE orderrequeststudents SET name=?,quantity=?,price=?,shipping=?,link=? WHERE orderrequeststudents_id = ?
+        `, [name, quantity, price, shipping, link, id], (err, results) => {
+            if (err) {
+                res.status(400).json({ err });
+            } else {
+                results = results[0];
+                res.status(201).json({ results });
+            }
+        }
+        );
+    }
+    catch (err) {
+        res.status(400).json({ err })
     }
 }

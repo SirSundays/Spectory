@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from 'src/app/service/user/user.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
 
 import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
 import { OrderRequestModalComponent } from '../order-request-modal/order-request-modal.component';
@@ -9,7 +10,8 @@ import { OrderRequestDetailModalComponent } from '../order-request-detail-modal/
 import { OrderRequestProcessComponent } from '../order-request-process/order-request-process.component';
 import { OrderRequestAllocateComponent } from '../order-request-allocate/order-request-allocate.component';
 import { ParcelTrackingDetailComponent } from '../parcel-tracking-detail/parcel-tracking-detail.component';
-import { FormBuilder } from '@angular/forms';
+import { OrderRequestStudentModalComponent } from '../order-request-student-modal/order-request-student-modal.component';
+import { OrderRequestStudentOverviewComponent } from '../order-request-student-overview/order-request-student-overview.component';
 
 @Component({
   selector: 'app-order-request-overview',
@@ -19,7 +21,7 @@ import { FormBuilder } from '@angular/forms';
 
 export class OrderRequestOverviewComponent implements OnInit {
 
-  constructor(private orderRequestService: OrderRequestService, private formBuilder: FormBuilder, private userService: UserService, private modalService: NgbModal, private route: ActivatedRoute) { }
+  constructor(private orderRequestService: OrderRequestService, private formBuilder: FormBuilder, private userService: UserService, private modalService: NgbModal, private route: ActivatedRoute, public router: Router) { }
 
   all_requests = [];
 
@@ -50,11 +52,30 @@ export class OrderRequestOverviewComponent implements OnInit {
       });
     });
     this.roles = this.userService.getUserRoles();
-
   }
 
   addRequest() {
     const modalRef = this.modalService.open(OrderRequestModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+  }
+
+  addStudentRequest() {
+    const modalRef = this.modalService.open(OrderRequestStudentModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+  }
+
+  addAsTemplate(id) {
+    const out = {
+      "id": id
+    };
+    this.orderRequestService.postNewRequestTemplate(out).subscribe(data => {
+      alert("Successfully saved as template.");
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/order-request/overview']);
+      });
+    });
+  }
+
+  showStudentTemplates() {
+    const modalRef = this.modalService.open(OrderRequestStudentOverviewComponent, { size: 'xl', backdrop: 'static', scrollable: true });
   }
 
   showRequestDeatils(id) {

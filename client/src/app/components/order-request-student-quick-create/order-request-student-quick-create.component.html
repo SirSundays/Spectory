@@ -1,0 +1,76 @@
+<div class="modal-header">
+    <h4 class="modal-title" *ngIf="edit_id;else newTemplate">Edit Template - {{this.templateForm.value.name}}</h4>
+    <ng-template #newTemplate><h4 class="modal-title">New Order Request Template</h4></ng-template>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let err of errMessage">
+            <strong>Warning!</strong> {{ err }}
+        </p>
+    </ngb-alert>
+</p>
+<form [formGroup]="templateForm" (ngSubmit)="submitRequest(templateForm.value)">
+    <div class="modal-body">
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="name">Name*</label>
+            </div>
+            <input id="name" type="text" class="form-control" formControlName="name" placeholder="Name *" required
+            minlength="1">
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left" ngbTooltip="What you want to order">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="quantity">Quantity*</label>
+            </div>
+            <input id="quantity" type="number" class="form-control" formControlName="quantity" placeholder="Quantity *"
+            min="1" required>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How many you want to order">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="price">Price*</label>
+            </div>
+            <input id="price" type="number" class="form-control" formControlName="price" placeholder="Price in € *"
+            min="1" required>
+            <div class="input-group-prepend">
+                <div class="input-group-text">€ ({{ templateForm.value.price / templateForm.value.quantity }}€ apiece)</div>
+            </div>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How much does the complete order cost excl. shipping">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="shipping">Shipping*</label>
+            </div>
+            <input id="shipping" type="number" class="form-control" formControlName="shipping"
+                placeholder="Shipping in € *" min="1" required>
+            <div class="input-group-prepend">
+                <div class="input-group-text">€</div>
+            </div>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How much does the shipping for the complete order cost">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="link">Link*</label>
+            </div>
+            <input id="link" type="text" class="form-control" formControlName="link" placeholder="Link *" required
+            minlength="1">
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="Where to buy this item (Doesn´t has to be a URL)">
+            </fa-icon>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="button" type="submit" class="btn btn-primary">Save template</button>
+    </div>
+</form>

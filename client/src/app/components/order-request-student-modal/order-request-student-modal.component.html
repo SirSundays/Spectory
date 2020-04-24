@@ -1,0 +1,96 @@
+<div class="modal-header">
+    <h4 class="modal-title">New Order Request - Student</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let err of errMessage">
+            <strong>Warning!</strong> {{ err }}
+        </p>
+    </ngb-alert>
+</p>
+<form [formGroup]="requestForm" (ngSubmit)="submitRequest(requestForm.value)">
+    <div class="modal-body">
+        <div class="input-group" style="min-height: 100px;">
+            <label>Choose what you need: </label>
+            <ng-select [items]="allTemplates" bindLabel="name" bindValue="orderrequeststudents_id" formControlName="orderrequeststudents_id" required style="width: 100%;" required></ng-select>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="name">Name*</label>
+            </div>
+            <input id="name" type="text" class="form-control" formControlName="name" placeholder="Name *" readonly>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left" ngbTooltip="What you want to order">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="quantity">Quantity*</label>
+            </div>
+            <input id="quantity" type="number" class="form-control" formControlName="quantity" placeholder="Quantity *"
+            readonly>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How many you want to order">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="price">Price*</label>
+            </div>
+            <input id="price" type="number" class="form-control" formControlName="price" placeholder="Price in € *"
+            readonly>
+            <div class="input-group-prepend">
+                <div class="input-group-text">€ ({{ requestForm.value.price / requestForm.value.quantity }}€ apiece)</div>
+            </div>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How much does the complete order cost excl. shipping">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="shipping">Shipping*</label>
+            </div>
+            <input id="shipping" type="number" class="form-control" formControlName="shipping"
+                placeholder="Shipping in € *" readonly>
+            <div class="input-group-prepend">
+                <div class="input-group-text">€</div>
+            </div>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="How much does the shipping for the complete order cost">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="reason">Reason*</label>
+            </div>
+            <input id="reason" type="text" class="form-control" formControlName="reason" placeholder="Reason *" min="1"
+                required>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="Why do you need this item">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="link">Link*</label>
+            </div>
+            <input id="link" type="text" class="form-control" formControlName="link" placeholder="Link *" readonly>
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="Where to buy this item (Doesn´t has to be a URL)">
+            </fa-icon>
+        </div>
+        <div class="input-group row">
+            <div class="col-2">
+                <label for="info">More info</label>
+            </div>
+            <input id="info" type="text" class="form-control" formControlName="info" placeholder="More information">
+            <fa-icon [icon]="['fas', 'info-circle']" class="info" placement="left"
+                ngbTooltip="Do we need to know more? (Not required)">
+            </fa-icon>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="button" type="submit" class="btn btn-primary">Request</button>
+    </div>
+</form>

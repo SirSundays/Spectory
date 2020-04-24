@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient, private keycloakAngular: KeycloakService) { }
 
   node_url = environment.nodejs_ip;
-  roles = ['basic', 'admin', 'purchaser'];
+  roles = ['basic', 'admin', 'purchaser', 'student'];
 
   getUserRoles() {
     try {

@@ -24,7 +24,7 @@ app.use(keycloak.middleware());
 spectoryDb = mysql.createPool({
   host: 'localhost',
   user: 'spectory',
-  password: '',
+  password: 'admin123',
   database: 'spectory',
   connectionLimit: 50
 });

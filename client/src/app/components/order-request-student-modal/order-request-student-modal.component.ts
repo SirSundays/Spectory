@@ -4,43 +4,48 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { OrderRequestService } from 'src/app/service/order-request/order-request.service';
-import { OrderRequestModalImportComponent } from '../order-request-modal-import/order-request-modal-import.component';
 
 @Component({
-  selector: 'app-order-request-modal',
-  templateUrl: './order-request-modal.component.html',
-  styleUrls: ['./order-request-modal.component.css']
+  selector: 'app-order-request-student-modal',
+  templateUrl: './order-request-student-modal.component.html',
+  styleUrls: ['./order-request-student-modal.component.css']
 })
-export class OrderRequestModalComponent implements OnInit {
+export class OrderRequestStudentModalComponent implements OnInit {
   requestForm;
   errAfterSubmit = false;
   errMessage = [];
 
+  allTemplates = [];
+
   constructor(private orderRequestService: OrderRequestService, private formBuilder: FormBuilder, private modalService: NgbModal, public activeModal: NgbActiveModal, public router: Router) { }
 
   ngOnInit(): void {
+    this.orderRequestService.getAllStudentRequestTemplates().subscribe(data => {
+      this.allTemplates = data["results"];
+    });
+
     this.requestForm = this.formBuilder.group({
+      orderrequeststudents_id: '',
       name: '',
-      quantity: '',
-      price: '',
-      shipping: '',
+      quantity: 0,
+      price: 0,
+      shipping: 0,
       reason: '',
       link: '',
       info: ''
-    })
+    });
+
+    this.onTemplateChange();
   }
 
-  async importRequest() {
-    const modalRef = this.modalService.open(OrderRequestModalImportComponent, {size: 'xl', backdrop: 'static', scrollable: true});
-    let importRequest = await modalRef.result;
-    this.requestForm.patchValue({
-      name: importRequest.name,
-      quantity: importRequest.quantity,
-      price: importRequest.price,
-      shipping: importRequest.shipping,
-      reason: importRequest.reason,
-      link: importRequest.link,
-      info: importRequest.info
+  onTemplateChange() {
+    this.requestForm.get('orderrequeststudents_id').valueChanges.subscribe(val => {
+      const newTemplate = this.allTemplates.find(template => template.orderrequeststudents_id == val);
+      this.requestForm.get('name').setValue(newTemplate.name);
+      this.requestForm.get('quantity').setValue(newTemplate.quantity);
+      this.requestForm.get('price').setValue(newTemplate.price);
+      this.requestForm.get('shipping').setValue(newTemplate.shipping);
+      this.requestForm.get('link').setValue(newTemplate.link);
     });
   }
 
@@ -54,6 +59,9 @@ export class OrderRequestModalComponent implements OnInit {
       this.errMessage = [];
       for (var control in this.requestForm.controls) {
         if (this.requestForm.get(control).status === 'INVALID') {
+          if (control == 'orderrequeststudents_id') {
+            control = 'Selecting a template';
+          }
           this.errMessage.push(this.ucFirst(control) + ' is required!');
         }
       };
@@ -79,6 +87,5 @@ export class OrderRequestModalComponent implements OnInit {
     console.log(err);
     this.errMessage = err.error;
   }
-
 
 }
