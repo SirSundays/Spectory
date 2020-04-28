@@ -6,12 +6,12 @@ import { KeycloakConfig } from 'keycloak-angular';
 
 // Add here your keycloak setup infos
 let keycloakConfig: KeycloakConfig = {
-  url: 'http://localhost:8000/auth',
-  realm: 'Spectory',
-  clientId: 'Spectory-Server'
+  url: '',
+  realm: '',
+  clientId: ''
 };
 
-let nodejs_ip  = 'http://localhost:4000'
+let nodejs_ip  = ''
 
 export const environment = {
   production: false,

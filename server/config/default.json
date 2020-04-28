@@ -1,0 +1,23 @@
+{
+    "mail": {
+        "service": "gmail",
+        "auth": {
+            "user": "",
+            "pass": ""
+        }
+    },
+    "keycloak": {
+        "realm": "",
+        "auth-server-url": "",
+        "bearer-only": true,
+        "ssl-required": "external",
+        "resource": ""
+    },
+    "db": {
+        "host": "",
+        "user": "",
+        "password": "",
+        "database": "",
+        "connectionLimit": 50
+    }
+}

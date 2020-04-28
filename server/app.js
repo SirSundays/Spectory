@@ -1,4 +1,5 @@
 const express = require("express");
+const config = require('config');
 const PORT = process.env.PORT || 4000;
 const morgan = require("morgan");
 const cors = require("cors");
@@ -9,25 +10,15 @@ const app = express();
 jwt = require('jsonwebtoken');
 Keycloak = require('keycloak-connect');
 
-keycloakConfig = {
-  "realm": "Spectory",
-  'auth-server-url': 'http://localhost:8000/auth',
-  'bearer-only': true,
-  'ssl-required': 'external',
-  'resource': 'Spectory-Nodejs-Server',
-};
+mailConfig = config.get('mail');
+
+keycloakConfig = config.get('keycloak');
 
 keycloak = new Keycloak({}, keycloakConfig);
 app.use(keycloak.middleware());
 
 //configure database and mongoose
-spectoryDb = mysql.createPool({
-  host: 'localhost',
-  user: 'spectory',
-  password: 'admin123',
-  database: 'spectory',
-  connectionLimit: 50
-});
+spectoryDb = mysql.createPool(config.get('db'));
 // db configuaration ends here
 
 //registering cors
