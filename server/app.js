@@ -13,6 +13,7 @@ Keycloak = require('keycloak-connect');
 mailConfig = config.get('mail');
 
 keycloakConfig = config.get('keycloak');
+keycloakAdminConfig = config.get('keycloak-admin');
 
 keycloak = new Keycloak({}, keycloakConfig);
 app.use(keycloak.middleware());
@@ -40,6 +41,10 @@ app.use("/api/user", userRoutes);
 const parcelTrackingRoutes = require("./api/parcelTracking/route/parcelTracking");
 app.use("/api/parcelTracking", parcelTrackingRoutes);
 
+app.get("/api/health", (req, res) => {
+  res.json({"status": "up"});
+});
+
 app.listen(PORT, () => {
-  // console.log(`App is running on ${PORT}`);
+  console.log(`App is running on ${PORT}`);
 });

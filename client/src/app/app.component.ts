@@ -12,6 +12,7 @@ import { UserService } from './service/user/user.service';
 
 export class AppComponent implements OnInit {
   userDetails: KeycloakProfile;
+  roles = [];
 
   constructor(private keycloakService: KeycloakService, public route: ActivatedRoute, private userService: UserService) {
     
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
     if (await this.keycloakService.isLoggedIn()) {
       this.userDetails = await this.keycloakService.loadUserProfile();
     }
+    this.roles = this.userService.getUserRoles();
   }
 
   async doLogout() {

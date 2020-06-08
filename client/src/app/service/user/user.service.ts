@@ -43,4 +43,12 @@ export class UserService {
   getAllPurchaserUser() {
     return this.http.get(this.node_url + '/api/user/allPurchaserUser');
   }
+
+  getAllGroups() {
+    return this.http.get(this.node_url + '/api/user/allGroups');
+  }
+
+  postNewUser(user) {
+    return this.http.post(this.node_url + '/api/user/newUser', user);
+  }
 }

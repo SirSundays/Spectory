@@ -3,13 +3,7 @@ const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require('path');
 
-var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: "bestaetigungsmail.ir@gmail.com",
-        pass: "`BA&'(Dyp)3i"
-    }
-});
+var transporter = nodemailer.createTransport(mailConfig);
 
 exports.orderRequestProcessMail = async function (id) {
     try {
@@ -36,7 +30,7 @@ exports.orderRequestProcessMail = async function (id) {
                 var html = template({ "request": results });
 
                 let mailOptions = {
-                    from: 'Spectory',
+                    from: '"Spectory" ' + mailConfig.auth.user,
                     to: results.requesterEmail,
                     subject: 'Your Orderrequest got processed',
                     html: html,
@@ -115,7 +109,7 @@ exports.orderRequestAllocate = async function (id) {
                 var htmlPurchaser = templatePurchaser({ "request": results });
 
                 let mailOptionsPurchaser = {
-                    from: 'Spectory',
+                    from: '"Spectory" ' + mailConfig.auth.user,
                     to: results.purchaserEmail,
                     subject: 'An Orderrequest got allocated to you',
                     html: htmlPurchaser,
@@ -142,7 +136,7 @@ exports.orderRequestAllocate = async function (id) {
     }
 }
 
-exports.parcelTrackingOrdered = async function(id) {
+exports.parcelTrackingOrdered = async function (id) {
     try {
         var templateHtmlReceiver = fs.readFileSync(path.join(process.cwd(), '/api/email/templates/parcelTrackingOrdered.html'), 'utf8');
         var templateReceiver = handlebars.compile(templateHtmlReceiver);
@@ -169,7 +163,7 @@ exports.parcelTrackingOrdered = async function(id) {
                 var htmlReciver = templateReceiver({ "request": results });
 
                 let mailOptionsReceiver = {
-                    from: 'Spectory',
+                    from: '"Spectory" ' + mailConfig.auth.user,
                     to: results.receiverEmail,
                     subject: 'Your Orderrequest got ordered',
                     html: htmlReciver,
@@ -190,6 +184,38 @@ exports.parcelTrackingOrdered = async function(id) {
             }
         }
         );
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+exports.userNewUser = async function (data) {
+    try {
+        var templateHtmlReceiver = fs.readFileSync(path.join(process.cwd(), '/api/email/templates/userNewUser.html'), 'utf8');
+        var templateReceiver = handlebars.compile(templateHtmlReceiver);
+
+        var htmlReciver = templateReceiver({ "user": data });
+
+        let mailOptionsReceiver = {
+            from: '"Spectory" ' + mailConfig.auth.user,
+            to: data.email,
+            subject: 'Welcome to Spectory',
+            html: htmlReciver,
+            attachments: [{
+                filename: 'spectory.png',
+                path: path.join(process.cwd(), '/api/email/assets/spectory.png'),
+                cid: 'spectoryLogo'
+            }]
+        };
+
+        transporter.sendMail(mailOptionsReceiver, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
     }
     catch (err) {
         console.log(err);

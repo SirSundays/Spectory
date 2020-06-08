@@ -159,3 +159,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/vue,node,windows,visualstudiocode
+
+server/config/
+
+client/src/environments/

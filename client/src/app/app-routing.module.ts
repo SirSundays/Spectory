@@ -4,9 +4,11 @@ import { AppAuthGuard } from './app.authguard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { OrderRequestOverviewComponent } from './components/order-request-overview/order-request-overview.component';
 import { ParcelTrackingOverviewComponent } from './components/parcel-tracking-overview/parcel-tracking-overview.component';
+import { UserFileImportComponent } from './components/user-file-import/user-file-import.component';
 
 const order_request = 'order-request'
 const parcelTracking = 'parcel-tracking'
+const user = 'user'
 
 const appRoutes: Routes = [
   {
@@ -43,6 +45,12 @@ const appRoutes: Routes = [
     component: ParcelTrackingOverviewComponent,
     canActivate: [AppAuthGuard],
     data: { roles: ['basic'] }
+  },
+  {
+    path: user + '/file-import',
+    component: UserFileImportComponent,
+    canActivate: [AppAuthGuard],
+    data: { roles: ['admin'] }
   },
   {
       path: '**',

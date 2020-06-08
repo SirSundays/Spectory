@@ -9,6 +9,7 @@
                     <ul class="nav navbar-nav" routerLinkActive="active">
                         <li class="nav-item"><a class="nav-link" routerLink="/order-request/overview">Order-Request</a></li>
                         <li class="nav-item"><a class="nav-link" routerLink="/parcel-tracking/overview">Parcel-Tracking</a></li>
+                        <li class="nav-item" *ngIf="roles.includes('admin')"><a class="nav-link" routerLink="/user/file-import">UserImport</a></li>
                     </ul>
                 </div>
             </nav>

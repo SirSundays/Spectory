@@ -1,0 +1,47 @@
+<h2>Import User from CSV-File</h2>
+<p *ngIf="errAfterSubmit">
+    <ngb-alert [dismissible]="false">
+        <p *ngFor="let error of errMessage">
+            <strong>Warning!</strong> {{ error }}
+        </p>
+    </ngb-alert>
+</p>
+<form [formGroup]="userForm" (ngSubmit)="loadData()">
+    <div class="input-group row">
+        <div>
+            <label for="importCSVFile">User-File:</label>
+        </div>
+        <div class="custom-file col-3">
+            <input type="file" class="custom-file-input" formControlName="importCSVFile" id="importCSVFile"
+                (change)="onFileChange($event.target.files)">
+            <label class="custom-file-label" #labelImport for="importFile"><i class="fas fa-search"></i> Choose
+                file</label>
+        </div>
+        <label>Group to add to: </label>
+        <ng-select [items]="allGroups" bindLabel="NAME" bindValue="NAME" formControlName="groups" class="col-3"></ng-select>
+        <button class="button" type="submit" class="btn btn-primary">Load File</button>
+        <button class="button" type="button" class="btn btn-primary" (click)="createUsers()">Create all Users</button>
+    </div>
+</form>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Firstname</th>
+                <th scope="col">Lastname</th>
+                <th scope="col">E-Mail</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users; index as i">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.surname }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

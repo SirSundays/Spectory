@@ -17,6 +17,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+import { NgxCsvParserModule } from 'ngx-csv-parser';
+
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -33,13 +35,14 @@ import { ParcelTrackingMoreInfoComponent } from './components/parcel-tracking-mo
 import { OrderRequestStudentModalComponent } from './components/order-request-student-modal/order-request-student-modal.component';
 import { OrderRequestStudentOverviewComponent } from './components/order-request-student-overview/order-request-student-overview.component';
 import { OrderRequestStudentQuickCreateComponent } from './components/order-request-student-quick-create/order-request-student-quick-create.component';
+import { UserFileImportComponent } from './components/user-file-import/user-file-import.component';
 
 let keycloakService: KeycloakService = new KeycloakService();
 
 @NgModule({
   declarations: [
     AppComponent, 
-    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent, ParcelTrackingMoreInfoComponent, OrderRequestStudentModalComponent, OrderRequestStudentOverviewComponent, OrderRequestStudentQuickCreateComponent,
+    DashboardComponent, OrderRequestOverviewComponent, OrderRequestModalComponent, OrderRequestDetailModalComponent, OrderRequestProcessComponent, OrderRequestModalImportComponent, OrderRequestAllocateComponent, ParcelTrackingOverviewComponent, ParcelTrackingModalComponent, ParcelTrackingDetailComponent, ParcelTrackingMoreInfoComponent, OrderRequestStudentModalComponent, OrderRequestStudentOverviewComponent, OrderRequestStudentQuickCreateComponent, UserFileImportComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +55,8 @@ let keycloakService: KeycloakService = new KeycloakService();
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxCsvParserModule
     ],
   providers: [
     {
