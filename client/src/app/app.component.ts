@@ -3,6 +3,7 @@ import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from './service/user/user.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,8 @@ import { UserService } from './service/user/user.service';
 export class AppComponent implements OnInit {
   userDetails: KeycloakProfile;
   roles = [];
+
+  userProfileURL = environment.userDetailsURL;
 
   constructor(private keycloakService: KeycloakService, public route: ActivatedRoute, private userService: UserService) {
     

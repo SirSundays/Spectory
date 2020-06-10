@@ -42,11 +42,11 @@ img {
   color: white;
 }
 
-#logout {
+.sidebar-btn {
     text-align: center;
     color: grey;
 }
 
-#logout:hover {
+.sidebar-btn:hover {
     cursor: pointer;
 }

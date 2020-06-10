@@ -15,8 +15,12 @@
             </nav>
         </div>
         <div class="sidebar-footer">
-            <a (click)="doLogout()" id="logout">
+            <a (click)="doLogout()" class="sidebar-btn">
                 <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
+            </a>
+            <p></p>
+            <a [href]="userProfileURL" target="_blank" class="sidebar-btn">
+                <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
             </a>
         </div>
     </div>
